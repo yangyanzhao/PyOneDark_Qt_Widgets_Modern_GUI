@@ -80,6 +80,14 @@ class MainWindow(QMainWindow):
             # Load Page 3 
             MainFunctions.set_page(self, self.ui.load_pages.page_3)
 
+        # 用户 BTN
+        if btn.objectName() == "btn_new_file":
+            # Select Menu
+            self.ui.left_menu.select_only_one(btn.objectName())
+
+            # Load Page 3
+            MainFunctions.set_page(self, self.ui.load_pages.page_3)
+
         # 左侧底部 信息 BTN
         if btn.objectName() == "btn_info":
             # CHECK IF LEFT COLUMN IS VISIBLE
