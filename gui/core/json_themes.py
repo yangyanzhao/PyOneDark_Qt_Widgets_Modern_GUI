@@ -19,9 +19,11 @@
 import json
 import os
 
+from gui.core import parent_directory
 # IMPORT SETTINGS
 # ///////////////////////////////////////////////////////////////
 from gui.core.json_settings import Settings
+
 
 # APP THEMES
 # ///////////////////////////////////////////////////////////////
@@ -33,9 +35,9 @@ class Themes(object):
 
     # APP PATH
     # ///////////////////////////////////////////////////////////////
-    json_file = f"gui/themes/{_settings['theme_name']}.json"
-    app_path = os.path.abspath(os.getcwd())
-    settings_path = os.path.normpath(os.path.join(app_path, json_file))
+    # json_file = f"gui/themes/{_settings['theme_name']}.json"
+    # app_path = os.path.abspath(os.getcwd())
+    settings_path = os.path.join(parent_directory, f"themes/{_settings['theme_name']}.json")
     if not os.path.isfile(settings_path):
         print(f"WARNING: \"gui/themes/{_settings['theme_name']}.json\" not found! check in the folder {settings_path}")
 

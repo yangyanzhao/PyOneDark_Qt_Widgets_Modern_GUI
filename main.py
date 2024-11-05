@@ -1,13 +1,14 @@
-from gui.uis.windows.main_window.functions_main_window import *
-import sys
-import os
+# ///////////////////////////////////////////////////////////////
+# 程序启动文件，并编辑菜单与页面之间的导航连接。
+# ///////////////////////////////////////////////////////////////
+import asyncio
 
+import qasync
+from gui.uis.windows.main_window.functions_main_window import *
+import os
 from qt_core import *
 from gui.core.json_settings import Settings
-
 from gui.uis.windows.main_window import *
-
-from gui.widgets import *
 
 # 调整QT字体DPI以适应4K显示器的高分辨率
 # 如果4K监视器启用 'os.environ["QT_SCALE_FACTOR"] = "2"'
@@ -17,7 +18,7 @@ os.environ["QT_FONT_DPI"] = "96"
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-
+        self.setWindowIcon(QIcon(Functions.set_svg_image("logo.svg")))
         # 加载 主界面
         # Load widgets from "gui\uis\main_window\ui_main.py"
         # ///////////////////////////////////////////////////////////////
@@ -76,17 +77,15 @@ class MainWindow(QMainWindow):
         if btn.objectName() == "btn_add_user":
             # Select Menu
             self.ui.left_menu.select_only_one(btn.objectName())
-
-            # Load Page 3 
+            # Load Page 3
             MainFunctions.set_page(self, self.ui.load_pages.page_3)
 
         # 用户 BTN
-        if btn.objectName() == "btn_new_file":
+        if btn.objectName() == "btn_we_chat":
             # Select Menu
             self.ui.left_menu.select_only_one(btn.objectName())
 
-            # Load Page 3
-            MainFunctions.set_page(self, self.ui.load_pages.page_3)
+            MainFunctions.set_page(self, self.ui.load_pages.wx_main_page)
 
         # 左侧底部 信息 BTN
         if btn.objectName() == "btn_info":
@@ -164,6 +163,13 @@ class MainWindow(QMainWindow):
 
 
 if __name__ == "__main__":
+    # 创建主循环
     app = QApplication()
-    window = MainWindow()
-    sys.exit(app.exec_())
+
+    # 创建异步事件循环
+    loop = qasync.QEventLoop(app)
+    asyncio.set_event_loop(loop)
+    # 创建窗口
+    main_window = MainWindow()
+    with loop:
+        loop.run_forever()

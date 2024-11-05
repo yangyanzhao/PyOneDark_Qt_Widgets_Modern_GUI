@@ -19,17 +19,19 @@
 import json
 import os
 
+from gui.core import grandparent_directory
+
+
 # APP SETTINGS
 # ///////////////////////////////////////////////////////////////
 class Settings(object):
     # APP PATH
     # ///////////////////////////////////////////////////////////////
-    json_file = "settings.json"
-    app_path = os.path.abspath(os.getcwd())
-    settings_path = os.path.normpath(os.path.join(app_path, json_file))
+    settings_path = os.path.join(grandparent_directory, "settings.json")
+
     if not os.path.isfile(settings_path):
         print(f"WARNING: \"settings.json\" not found! check in the folder {settings_path}")
-    
+
     # INIT SETTINGS
     # ///////////////////////////////////////////////////////////////
     def __init__(self):

@@ -1,17 +1,5 @@
 # ///////////////////////////////////////////////////////////////
-#
-# BY: WANDERSON M.PIMENTA
-# PROJECT MADE WITH: Qt Designer and PySide6
-# V: 1.0.0
-#
-# This project can be used freely for all uses, as long as they maintain the
-# respective credits only in the Python scripts, any information in the visual
-# interface (GUI) can be modified without any implication.
-#
-# There are limitations on Qt licenses if you want to use your products
-# commercially, I recommend reading them on the official website:
-# https://doc.qt.io/qtforpython/licenses.html
-#
+# 此文件，编辑菜单项、菜单图标、菜单标题、菜单位置、默认打开。
 # ///////////////////////////////////////////////////////////////
 
 # IMPORT PACKAGES AND MODULES
@@ -85,17 +73,17 @@ class SetupMainWindow:
             "is_active": False
         },
         {
-            "btn_icon": "icon_file.svg",
-            "btn_id": "btn_new_file",
-            "btn_text": "New File",
+            "btn_icon": "icon_微信.svg",
+            "btn_id": "btn_we_chat",
+            "btn_text": "WeChat",
             "btn_tooltip": "Create new file",
             "show_top": True,
             "is_active": False
         },
         {
-            "btn_icon": "icon_folder_open.svg",
-            "btn_id": "btn_open_file",
-            "btn_text": "Open File",
+            "btn_icon": "icon_知乎.svg",
+            "btn_id": "btn_zhi_hu",
+            "btn_text": "ZhiHu",
             "btn_tooltip": "Open file",
             "show_top": True,
             "is_active": False
