@@ -6,6 +6,7 @@ from gui.core.functions import Functions
 # ///////////////////////////////////////////////////////////////
 from gui.widgets.py_table_widget.py_table_widget import PyTableWidget
 from modules.other.widget_factory import WidgetFactory
+from modules.wx_auto.interfaces.setting_interface import SettingInterface
 from .functions_main_window import *
 import sys
 import os
@@ -256,7 +257,7 @@ class SetupMainWindow:
 
         # 自定义 左列 设置菜单 TODO
         # ///////////////////////////////////////////////////////////////
-        widget_f = WidgetFactory(widget_name="1风")
+        widget_f = SettingInterface()
         self.ui.left_column.menus.menus.addWidget(widget_f)
         widget_y = WidgetFactory(widget_name="2雅")
         self.ui.left_column.menus.menus.addWidget(widget_y)
@@ -267,7 +268,7 @@ class SetupMainWindow:
         widget_d = WidgetFactory(widget_name="5达")
         self.ui.left_column.menus.menus.addWidget(widget_d)
 
-        widget_f.button.clicked.connect(lambda: self.ui.left_column.menus.menus.setCurrentWidget(widget_y))
+        # widget_f.button.clicked.connect(lambda: self.ui.left_column.menus.menus.setCurrentWidget(widget_y))
         widget_y.button.clicked.connect(lambda: self.ui.left_column.menus.menus.setCurrentWidget(widget_s))
         widget_s.button.clicked.connect(lambda: self.ui.left_column.menus.menus.setCurrentWidget(widget_x))
         widget_x.button.clicked.connect(lambda: self.ui.left_column.menus.menus.setCurrentWidget(widget_d))

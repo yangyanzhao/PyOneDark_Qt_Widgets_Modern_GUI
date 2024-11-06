@@ -21,28 +21,35 @@ class MSettingsWidget(QtWidgets.QWidget, MFieldMixin):
         self.init_ui()
 
     def init_ui(self):
-        right_lay = QtWidgets.QVBoxLayout()
+        self.right_lay = QtWidgets.QVBoxLayout()
+        self.right_lay.setContentsMargins(0, 0, 0, 0)
+        self.right_lay.setSpacing(0)
+
         scroll = QtWidgets.QScrollArea()
         scroll.setWidgetResizable(True)
         task_widget = QtWidgets.QWidget()
 
         scroll.setWidget(task_widget)
-        right_lay.addWidget(scroll)
+        self.right_lay.addWidget(scroll)
         right_widget = QtWidgets.QWidget()
-        right_widget.setLayout(right_lay)
+        right_widget.setLayout(self.right_lay)
         splitter = QtWidgets.QSplitter()
         splitter.addWidget(right_widget)
         splitter.setStretchFactor(0, 80)
         splitter.setStretchFactor(1, 20)
-        main_lay = QtWidgets.QVBoxLayout()
-        main_lay.addWidget(splitter)
-        self.setLayout(main_lay)
+        self.main_lay = QtWidgets.QVBoxLayout()
+        self.main_lay.setContentsMargins(0, 0, 0, 0)
+        self.main_lay.setSpacing(0)
+
+        self.main_lay.addWidget(splitter)
+        self.setLayout(self.main_lay)
 
         self.task_card_lay = QtWidgets.QVBoxLayout()
         task_widget.setLayout(self.task_card_lay)
 
     def add_setting(self, widget: QWidget, field_name: str, widget_property: str, widget_signal: str,
-                    cover=None, avatar=None, title=None, description=None, extra=False, parent=None):
+                    cover=None, avatar=None, title=None, description=None, extra=False, parent=None,
+                    maximumHeight=None, maximumWidth=None, minimumHeight=None, minimumWidth=None):
         # 注册属性
         self.register_field(name=field_name)
         # 尝试获取配置
@@ -53,6 +60,14 @@ class MSettingsWidget(QtWidgets.QWidget, MFieldMixin):
         else:
             self.set_field(name=field_name, value=widget.property(widget_property))
         meta = MSettingMeta()
+        if maximumWidth:
+            meta.setMaximumWidth(maximumWidth)
+        if minimumWidth:
+            meta.setMinimumWidth(minimumWidth)
+        if maximumHeight:
+            meta.setMaximumHeight(maximumHeight)
+        if minimumHeight:
+            meta.setMinimumHeight(minimumHeight)
         meta.setup_data({
             'cover': cover,  # 封面图片路径 例:MPixmap("app-houdini.png")
             'avatar': avatar,  # 头像图片路径 例:MPixmap("success_line.svg")
@@ -120,13 +135,13 @@ if __name__ == '__main__':
     demo_widget = MSettingsWidget()
     demo_widget.add_setting(widget=MSwitch(), field_name=f"is_auto_run1", widget_property="checked",
                             widget_signal="toggled",
-                            title="自动添加", avatar=MPixmap("icons/自动运行.svg", color="#FF0000"))
+                            title="自动添加", avatar=MPixmap("user_line.svg", color="#FF0000"))
     demo_widget.add_setting(widget=MSwitch(), field_name=f"is_auto_run2", widget_property="checked",
                             widget_signal="toggled",
-                            title="自动添加", avatar=MPixmap("icons/自动运行.svg", color="#FF00FF"))
+                            title="自动添加", avatar=MPixmap("user_line.svg", color="#FF00FF"))
     demo_widget.add_setting(widget=MSwitch(), field_name=f"is_auto_run3", widget_property="checked",
                             widget_signal="toggled",
-                            title="自动添加", avatar=MPixmap("icons/自动运行.svg", color="#FFFF00"))
+                            title="自动添加", avatar=MPixmap("user_line.svg", color="#FFFF00"))
     MTheme(theme='dark').apply(demo_widget)
     # 显示窗口
     demo_widget.show()
