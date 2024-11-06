@@ -17,6 +17,7 @@
 # IMPORT PACKAGES AND MODULES
 # ///////////////////////////////////////////////////////////////
 from gui.core.functions import Functions
+from gui.widgets.py_left_column.py_left_column_info import PyLeftColumnInfo
 
 # IMPORT QT CORE
 # ///////////////////////////////////////////////////////////////
@@ -173,6 +174,38 @@ class UI_MainWindow(object):
         )
         self.left_column_layout.addWidget(self.left_column)
 
+        self.left_column_info_frame = QFrame()
+        self.left_column_info_frame.setMaximumWidth(self.settings["left_column_size"]["minimum"])
+        self.left_column_info_frame.setMinimumWidth(self.settings["left_column_size"]["minimum"])
+        self.left_column_info_frame.setStyleSheet(f"background: {self.themes['app_color']['bg_two']}")
+
+        # ADD LAYOUT TO LEFT COLUMN
+        self.left_column_info_layout = QVBoxLayout(self.left_column_info_frame)
+        self.left_column_info_layout.setContentsMargins(0, 0, 0, 0)
+
+        # ADD CUSTOM LEFT MENU WIDGET
+        self.left_column_info = PyLeftColumnInfo(
+            parent,
+            app_parent=self.central_widget,
+            text_title="Info Left Frame",
+            text_title_size=self.settings["font"]["title_size"],
+            text_title_color=self.themes['app_color']['text_foreground'],
+            icon_path=Functions.set_svg_icon("icon_settings.svg"),
+            dark_one=self.themes['app_color']['dark_one'],
+            bg_color=self.themes['app_color']['bg_three'],
+            btn_color=self.themes['app_color']['bg_three'],
+            btn_color_hover=self.themes['app_color']['bg_two'],
+            btn_color_pressed=self.themes['app_color']['bg_one'],
+            icon_color=self.themes['app_color']['icon_color'],
+            icon_color_hover=self.themes['app_color']['icon_hover'],
+            context_color=self.themes['app_color']['context_color'],
+            icon_color_pressed=self.themes['app_color']['icon_pressed'],
+            icon_close_path=Functions.set_svg_icon("icon_close.svg")
+        )
+        self.left_column_info_layout.addWidget(self.left_column_info)
+
+
+
         # ADD RIGHT WIDGETS
         # Add here the right widgets
         # ///////////////////////////////////////////////////////////////
@@ -298,6 +331,7 @@ class UI_MainWindow(object):
         # ///////////////////////////////////////////////////////////////
         self.window.layout.addWidget(self.left_menu_frame)
         self.window.layout.addWidget(self.left_column_frame)
+        self.window.layout.addWidget(self.left_column_info_frame)
         self.window.layout.addWidget(self.right_app_frame)
 
         # ADD CENTRAL WIDGET AND SET CONTENT MARGINS

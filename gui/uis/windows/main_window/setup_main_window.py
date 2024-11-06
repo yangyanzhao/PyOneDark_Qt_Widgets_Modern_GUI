@@ -1,11 +1,12 @@
 # ///////////////////////////////////////////////////////////////
 # 此文件，编辑菜单项、菜单图标、菜单标题、菜单位置、默认打开。
 # ///////////////////////////////////////////////////////////////
-
+from gui.core.functions import Functions
 # IMPORT PACKAGES AND MODULES
 # ///////////////////////////////////////////////////////////////
 from gui.widgets.py_table_widget.py_table_widget import PyTableWidget
-from . functions_main_window import *
+from modules.other.widget_factory import WidgetFactory
+from .functions_main_window import *
 import sys
 import os
 
@@ -24,6 +25,7 @@ from gui.core.json_themes import Themes
 # IMPORT PY ONE DARK WIDGETS
 # ///////////////////////////////////////////////////////////////
 from gui.widgets import *
+from .functions_main_window import MainFunctions
 
 # LOAD UI MAIN
 # ///////////////////////////////////////////////////////////////
@@ -141,6 +143,8 @@ class SetupMainWindow:
             return self.ui.left_menu.sender()
         elif self.ui.left_column.sender() != None:
             return self.ui.left_column.sender()
+        elif self.ui.left_column_info.sender() != None:
+            return self.ui.left_column_info.sender()
 
     # SETUP MAIN WINDOW WITH CUSTOM PARAMETERS
     # ///////////////////////////////////////////////////////////////
@@ -196,16 +200,12 @@ class SetupMainWindow:
         self.ui.left_column.clicked.connect(self.btn_clicked)
         self.ui.left_column.released.connect(self.btn_released)
 
+        self.ui.left_column_info.clicked.connect(self.btn_clicked)
+        self.ui.left_column_info.released.connect(self.btn_released)
+
         # SET INITIAL PAGE / SET LEFT AND RIGHT COLUMN MENUS
         # ///////////////////////////////////////////////////////////////
         MainFunctions.set_page(self, self.ui.load_pages.page_1)
-        MainFunctions.set_left_column_menu(
-            self,
-            menu=self.ui.left_column.menus.menu_1,
-            title="Settings Left Column",
-            icon_path=Functions.set_svg_icon("icon_settings.svg")
-        )
-        MainFunctions.set_right_column_menu(self, self.ui.right_column.menu_1)
 
         # ///////////////////////////////////////////////////////////////
         # EXAMPLE CUSTOM WIDGETS
@@ -235,41 +235,45 @@ class SetupMainWindow:
         themes = Themes()
         self.themes = themes.items
 
-        # LEFT COLUMN
+        # 自定义 左列 信息菜单 TODO
         # ///////////////////////////////////////////////////////////////
+        widget_zhi = WidgetFactory(widget_name="1智")
+        self.ui.left_column_info.menus.menus.addWidget(widget_zhi)
+        widget_xin = WidgetFactory(widget_name="2信")
+        self.ui.left_column_info.menus.menus.addWidget(widget_xin)
+        widget_ren = WidgetFactory(widget_name="3仁")
+        self.ui.left_column_info.menus.menus.addWidget(widget_ren)
+        widget_yong = WidgetFactory(widget_name="4勇")
+        self.ui.left_column_info.menus.menus.addWidget(widget_yong)
+        widget_yan = WidgetFactory(widget_name="5严")
+        self.ui.left_column_info.menus.menus.addWidget(widget_yan)
 
-        # BTN 1
-        self.left_btn_1 = PyPushButton(
-            text="Btn 1",
-            radius=8,
-            color=self.themes["app_color"]["text_foreground"],
-            bg_color=self.themes["app_color"]["dark_one"],
-            bg_color_hover=self.themes["app_color"]["dark_three"],
-            bg_color_pressed=self.themes["app_color"]["dark_four"]
-        )
-        self.left_btn_1.setMaximumHeight(40)
-        self.ui.left_column.menus.btn_1_layout.addWidget(self.left_btn_1)
+        widget_zhi.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(widget_xin))
+        widget_xin.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(widget_ren))
+        widget_ren.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(widget_yong))
+        widget_yong.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(widget_yan))
+        widget_yan.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(widget_zhi))
 
-        # BTN 2
-        self.left_btn_2 = PyPushButton(
-            text="Btn With Icon",
-            radius=8,
-            color=self.themes["app_color"]["text_foreground"],
-            bg_color=self.themes["app_color"]["dark_one"],
-            bg_color_hover=self.themes["app_color"]["dark_three"],
-            bg_color_pressed=self.themes["app_color"]["dark_four"]
-        )
-        self.icon = QIcon(Functions.set_svg_icon("icon_settings.svg"))
-        self.left_btn_2.setIcon(self.icon)
-        self.left_btn_2.setMaximumHeight(40)
-        self.ui.left_column.menus.btn_2_layout.addWidget(self.left_btn_2)
+        # 自定义 左列 设置菜单 TODO
+        # ///////////////////////////////////////////////////////////////
+        widget_f = WidgetFactory(widget_name="1风")
+        self.ui.left_column.menus.menus.addWidget(widget_f)
+        widget_y = WidgetFactory(widget_name="2雅")
+        self.ui.left_column.menus.menus.addWidget(widget_y)
+        widget_s = WidgetFactory(widget_name="3颂")
+        self.ui.left_column.menus.menus.addWidget(widget_s)
+        widget_x = WidgetFactory(widget_name="4信")
+        self.ui.left_column.menus.menus.addWidget(widget_x)
+        widget_d = WidgetFactory(widget_name="5达")
+        self.ui.left_column.menus.menus.addWidget(widget_d)
 
-        # BTN 3 - Default QPushButton
-        self.left_btn_3 = QPushButton("Default QPushButton")
-        self.left_btn_3.setMaximumHeight(40)
-        self.ui.left_column.menus.btn_3_layout.addWidget(self.left_btn_3)
+        widget_f.button.clicked.connect(lambda: self.ui.left_column.menus.menus.setCurrentWidget(widget_y))
+        widget_y.button.clicked.connect(lambda: self.ui.left_column.menus.menus.setCurrentWidget(widget_s))
+        widget_s.button.clicked.connect(lambda: self.ui.left_column.menus.menus.setCurrentWidget(widget_x))
+        widget_x.button.clicked.connect(lambda: self.ui.left_column.menus.menus.setCurrentWidget(widget_d))
+        widget_d.button.clicked.connect(lambda: self.ui.left_column.menus.menus.setCurrentWidget(widget_f))
 
-        # PAGES
+        # 页面列表
         # ///////////////////////////////////////////////////////////////
 
         # PAGE 1 - ADD LOGO TO MAIN PAGE
@@ -532,44 +536,27 @@ class SetupMainWindow:
         self.ui.load_pages.row_4_layout.addWidget(self.line_edit)
         self.ui.load_pages.row_5_layout.addWidget(self.table_widget)
 
-        # RIGHT COLUMN
+        # 自定义 右列 设置菜单 TODO
         # ///////////////////////////////////////////////////////////////
+        widget_xq = WidgetFactory(widget_name="1象棋")
+        self.ui.right_column.menus.addWidget(widget_xq)
+        widget_wq = WidgetFactory(widget_name="2围棋")
+        self.ui.right_column.menus.addWidget(widget_wq)
+        widget_jq = WidgetFactory(widget_name="3军旗")
+        self.ui.right_column.menus.addWidget(widget_jq)
+        widget_tq = WidgetFactory(widget_name="4跳棋")
+        self.ui.right_column.menus.addWidget(widget_tq)
+        widget_dsq = WidgetFactory(widget_name="5兽棋")
+        self.ui.right_column.menus.addWidget(widget_dsq)
 
-        # BTN 1
-        self.right_btn_1 = PyPushButton(
-            text="Show Menu 2",
-            radius=8,
-            color=self.themes["app_color"]["text_foreground"],
-            bg_color=self.themes["app_color"]["dark_one"],
-            bg_color_hover=self.themes["app_color"]["dark_three"],
-            bg_color_pressed=self.themes["app_color"]["dark_four"]
-        )
-        self.icon_right = QIcon(Functions.set_svg_icon("icon_arrow_right.svg"))
-        self.right_btn_1.setIcon(self.icon_right)
-        self.right_btn_1.setMaximumHeight(40)
-        self.right_btn_1.clicked.connect(lambda: MainFunctions.set_right_column_menu(
-            self,
-            self.ui.right_column.menu_2
-        ))
-        self.ui.right_column.btn_1_layout.addWidget(self.right_btn_1)
+        widget_xq.button.clicked.connect(lambda: self.ui.right_column.menus.setCurrentWidget(widget_wq))
+        widget_wq.button.clicked.connect(lambda: self.ui.right_column.menus.setCurrentWidget(widget_jq))
+        widget_jq.button.clicked.connect(lambda: self.ui.right_column.menus.setCurrentWidget(widget_tq))
+        widget_tq.button.clicked.connect(lambda: self.ui.right_column.menus.setCurrentWidget(widget_dsq))
+        widget_dsq.button.clicked.connect(lambda: self.ui.right_column.menus.setCurrentWidget(widget_xq))
 
-        # BTN 2
-        self.right_btn_2 = PyPushButton(
-            text="Show Menu 1",
-            radius=8,
-            color=self.themes["app_color"]["text_foreground"],
-            bg_color=self.themes["app_color"]["dark_one"],
-            bg_color_hover=self.themes["app_color"]["dark_three"],
-            bg_color_pressed=self.themes["app_color"]["dark_four"]
-        )
-        self.icon_left = QIcon(Functions.set_svg_icon("icon_arrow_left.svg"))
-        self.right_btn_2.setIcon(self.icon_left)
-        self.right_btn_2.setMaximumHeight(40)
-        self.right_btn_2.clicked.connect(lambda: MainFunctions.set_right_column_menu(
-            self,
-            self.ui.right_column.menu_1
-        ))
-        self.ui.right_column.btn_2_layout.addWidget(self.right_btn_2)
+        # 右列设置菜单首页（默认首页是第一个）
+        self.ui.right_column.menus.setCurrentWidget(widget_xq)
 
         # ///////////////////////////////////////////////////////////////
         # END - EXAMPLE CUSTOM WIDGETS

@@ -88,17 +88,29 @@ class MainWindow(QMainWindow):
             MainFunctions.set_page(self, self.ui.load_pages.wx_main_page)
 
         # 左侧底部 信息 BTN
-        if btn.objectName() == "btn_info":
+        if btn.objectName() == "btn_info" or btn.objectName() == "btn_close_left_column_info":
             # CHECK IF LEFT COLUMN IS VISIBLE
-            if not MainFunctions.left_column_is_visible(self):
+            if not MainFunctions.left_column_info_is_visible(self):
                 self.ui.left_menu.select_only_one_tab(btn.objectName())
                 # 显示
-                MainFunctions.toggle_left_column(self)
+                MainFunctions.toggle_left_column_info(self)
             else:
-                self.ui.left_menu.select_only_one_tab(btn.objectName())
+                if btn.objectName() == "btn_close_left_column_info":
+                    self.ui.left_menu.deselect_all_tab()
+                    # Show / Hide
+                    MainFunctions.toggle_left_column_info(self)
                 # 隐藏
-                MainFunctions.toggle_left_column(self)
-
+                MainFunctions.toggle_left_column_info(self)
+                self.ui.left_menu.select_only_one_tab(btn.objectName())
+            pass
+            # Change Left Column Menu
+            if btn.objectName() != "btn_close_left_column_info":
+                MainFunctions.set_left_column_info_menu(
+                    self,
+                    menu=self.ui.left_column_info.menus.menus.currentWidget(),
+                    title="Info Left Column",
+                    icon_path=Functions.set_svg_icon("icon_info.svg")
+                )
         # 左侧底部 设置 BTN
         if btn.objectName() == "btn_settings" or btn.objectName() == "btn_close_left_column":
             # CHECK IF LEFT COLUMN IS VISIBLE
@@ -118,7 +130,7 @@ class MainWindow(QMainWindow):
             if btn.objectName() != "btn_close_left_column":
                 MainFunctions.set_left_column_menu(
                     self,
-                    menu=self.ui.left_column.menus.menu_1,
+                    menu=self.ui.left_column.menus.menus.currentWidget(),
                     title="Settings Left Column",
                     icon_path=Functions.set_svg_icon("icon_settings.svg")
                 )
