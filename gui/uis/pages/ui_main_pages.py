@@ -1,6 +1,8 @@
 # ///////////////////////////////////////////////////////////////
 # 此文件中将页面装载入页面容器中
 # ///////////////////////////////////////////////////////////////
+from dayu_widgets.stacked_widget import MStackedWidget
+
 from modules.wx_auto.main import WxMainWidget
 # IMPORT QT CORE
 # ///////////////////////////////////////////////////////////////
@@ -17,7 +19,7 @@ class Ui_MainPages(object):
         self.main_pages_layout.setObjectName(u"main_pages_layout")
         self.main_pages_layout.setContentsMargins(5, 5, 5, 5)
         # 页面容器
-        self.pages = QStackedWidget(MainPages)
+        self.pages = MStackedWidget(MainPages)
         self.pages.setObjectName(u"pages")
 
         # 示例页面一

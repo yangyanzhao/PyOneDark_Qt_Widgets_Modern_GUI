@@ -13,6 +13,7 @@
 # https://doc.qt.io/qtforpython/licenses.html
 #
 # ///////////////////////////////////////////////////////////////
+from dayu_widgets.stacked_widget import MStackedWidget
 
 # IMPORT QT CORE
 # ///////////////////////////////////////////////////////////////
@@ -28,7 +29,7 @@ class Ui_LeftColumn(object):
         self.main_pages_layout.setSpacing(0)
         self.main_pages_layout.setObjectName(u"main_pages_layout")
         self.main_pages_layout.setContentsMargins(5, 5, 5, 5)
-        self.menus = QStackedWidget(LeftColumn)
+        self.menus = MStackedWidget(LeftColumn)
         self.menus.setObjectName(u"menus")
 
         self.main_pages_layout.addWidget(self.menus)

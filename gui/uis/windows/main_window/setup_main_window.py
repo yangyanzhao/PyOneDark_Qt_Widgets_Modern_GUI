@@ -273,7 +273,7 @@ class SetupMainWindow:
         widget_x.button.clicked.connect(lambda: self.ui.left_column.menus.menus.setCurrentWidget(widget_d))
         widget_d.button.clicked.connect(lambda: self.ui.left_column.menus.menus.setCurrentWidget(widget_f))
 
-        # 页面列表
+        # 页面补全，对已有页面进行填充
         # ///////////////////////////////////////////////////////////////
 
         # PAGE 1 - ADD LOGO TO MAIN PAGE
