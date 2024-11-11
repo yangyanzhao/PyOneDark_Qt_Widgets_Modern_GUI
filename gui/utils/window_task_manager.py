@@ -22,7 +22,7 @@ def create_shutdown_task(time, task_name):
     action = task_def.Actions.Create(0)  # 0 表示执行命令
     action.ID = 'ShutdownAction'
     action.Path = 'shutdown'
-    action.Arguments = '/s /t 0'  # /s 表示关机，/t 0 表示立即关机
+    action.Arguments = '/s /t 180 /c "该计算机将在 3 分钟后关闭。请保存您的工作并退出程序。"'  # /s 表示关机，/t 0 表示立即关机
 
     # 注册任务
     root_folder.RegisterTaskDefinition(
@@ -156,6 +156,7 @@ if __name__ == "__main__":
     # 示例：删除任务
     # delete_task('DailyShutdown')
     # delete_task('DailyStartup')
-    get_task_next_run_time("DailyShutdown")
+    # get_task_next_run_time("DailyShutdown")
     # 示例：任务列表
     list_tasks()
+    # create_shutdown_task('DailyShutdown', '2023-10-01T23:00:00')

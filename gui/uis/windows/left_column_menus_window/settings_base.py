@@ -156,7 +156,7 @@ class SettingBaseInterface(QWidget, MFieldMixin):
 
         def toggled_handle_close(x):
             if x:
-                create_startup_task(task_name="DailyShutdown", time=f"2023-10-01T{m_time_edit_close.text()}")
+                create_shutdown_task(task_name="DailyShutdown", time=f"2023-10-01T{m_time_edit_close.text()}")
                 m_time_edit_close.setDisabled(True)
                 meta_win_close._avatar.set_dayu_image(
                     MPixmap(Functions.set_svg_icon('app-windos.svg'), color='red'))
