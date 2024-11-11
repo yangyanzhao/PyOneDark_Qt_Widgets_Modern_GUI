@@ -6,6 +6,9 @@ import asyncio
 import qasync
 from gui.uis.windows.main_window.functions_main_window import *
 import os
+
+from gui.utils.file_lock import FileLock
+from gui.utils.system_tray import SystemTrayTool
 from qt_core import *
 from gui.core.json_settings import Settings
 from gui.uis.windows.main_window import *
@@ -18,7 +21,16 @@ os.environ["QT_FONT_DPI"] = "96"
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
+        self.setWindowTitle("测试")
         self.setWindowIcon(QIcon(Functions.set_svg_image("logo.svg")))
+        system_tray_tool = SystemTrayTool(self)
+        online = FileLock.is_pid_running(FileLock.get_pid())
+        if online:
+            FileLock.find_and_activate_window("测试")
+            sys.exit(0)
+        else:
+            # 创建文件锁
+            lock = FileLock()
         # 加载 主界面
         # Load widgets from "gui\uis\main_window\ui_main.py"
         # ///////////////////////////////////////////////////////////////
