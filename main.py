@@ -21,12 +21,16 @@ os.environ["QT_FONT_DPI"] = "96"
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("测试")
+        # 加载 参数设置
+        # ///////////////////////////////////////////////////////////////
+        settings = Settings()
+        self.settings = settings.items
+
         self.setWindowIcon(QIcon(Functions.set_svg_image("logo.svg")))
         system_tray_tool = SystemTrayTool(self)
         online = FileLock.is_pid_running(FileLock.get_pid())
         if online:
-            FileLock.find_and_activate_window("测试")
+            FileLock.find_and_activate_window(self.settings['app_name'])
             sys.exit(0)
         else:
             # 创建文件锁
@@ -36,11 +40,6 @@ class MainWindow(QMainWindow):
         # ///////////////////////////////////////////////////////////////
         self.ui = UI_MainWindow()
         self.ui.setup_ui(self)
-
-        # 加载 参数设置
-        # ///////////////////////////////////////////////////////////////
-        settings = Settings()
-        self.settings = settings.items
 
         # SETUP MAIN WINDOW
         # ///////////////////////////////////////////////////////////////
