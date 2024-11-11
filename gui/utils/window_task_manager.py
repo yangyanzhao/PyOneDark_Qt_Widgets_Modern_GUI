@@ -35,7 +35,7 @@ def create_shutdown_task(time, task_name):
     )
 
 
-# 创建开机任务
+# 创建重启任务
 def create_startup_task(time, task_name):
     scheduler = win32com.client.Dispatch('Schedule.Service')
     scheduler.Connect()
@@ -52,7 +52,7 @@ def create_startup_task(time, task_name):
     action = task_def.Actions.Create(0)  # 0 表示执行命令
     action.ID = 'StartupAction'
     action.Path = 'shutdown'
-    action.Arguments = '/r /t 0'  # /r 表示重启，/t 0 表示立即重启
+    action.Arguments = '/r /t 180 /c "该计算机将在 3 分钟后关闭。请保存您的工作并退出程序。"'  # /r 表示重启，/t 0 表示立即重启
 
     # 注册任务
     root_folder.RegisterTaskDefinition(

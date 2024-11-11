@@ -101,7 +101,7 @@ class SettingBaseInterface(QWidget, MFieldMixin):
         meta_win_open.setup_data({
             'avatar': MPixmap(Functions.set_svg_icon('app-windos.svg')),
             # 头像图片路径 例:MPixmap("success_line.svg")
-            'title': "电脑定时开机",  # 标题文本
+            'title': "电脑定时重启",  # 标题文本
             # 'description': "开机自启动程序",  # 描述文本
         })
         m_switch_win_open = MSwitch()
