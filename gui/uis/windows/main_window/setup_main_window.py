@@ -35,6 +35,7 @@ from .ui_main import *
 # MAIN FUNCTIONS 
 # ///////////////////////////////////////////////////////////////
 from .functions_main_window import *
+from ..left_column_menus_window.settings_base import SettingBaseInterface
 
 
 # PY WINDOW
@@ -257,22 +258,10 @@ class SetupMainWindow:
 
         # 自定义 左列 设置菜单 TODO
         # ///////////////////////////////////////////////////////////////
-        widget_f = SettingInterface()
-        self.ui.left_column.menus.menus.addWidget(widget_f)
-        widget_y = WidgetFactory(widget_name="2雅")
-        self.ui.left_column.menus.menus.addWidget(widget_y)
-        widget_s = WidgetFactory(widget_name="3颂")
-        self.ui.left_column.menus.menus.addWidget(widget_s)
-        widget_x = WidgetFactory(widget_name="4信")
-        self.ui.left_column.menus.menus.addWidget(widget_x)
-        widget_d = WidgetFactory(widget_name="5达")
-        self.ui.left_column.menus.menus.addWidget(widget_d)
+        setting_base_interface = SettingBaseInterface()
+        self.ui.left_column.menus.menus.addWidget(setting_base_interface)
+        self.ui.left_column.menus.menus.setCurrentWidget(setting_base_interface)
 
-        # widget_f.button.clicked.connect(lambda: self.ui.left_column.menus.menus.setCurrentWidget(widget_y))
-        widget_y.button.clicked.connect(lambda: self.ui.left_column.menus.menus.setCurrentWidget(widget_s))
-        widget_s.button.clicked.connect(lambda: self.ui.left_column.menus.menus.setCurrentWidget(widget_x))
-        widget_x.button.clicked.connect(lambda: self.ui.left_column.menus.menus.setCurrentWidget(widget_d))
-        widget_d.button.clicked.connect(lambda: self.ui.left_column.menus.menus.setCurrentWidget(widget_f))
 
         # 页面补全，对已有页面进行填充
         # ///////////////////////////////////////////////////////////////

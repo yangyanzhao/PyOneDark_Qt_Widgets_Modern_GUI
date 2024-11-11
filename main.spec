@@ -1,12 +1,20 @@
 # -*- mode: python ; coding: utf-8 -*-
-
-
+import os
+import site
+# 找到第三方依赖的路径
+site_packages_dirs = site.getsitepackages()
+dayu_widgets_path = None
+for site_packages_dir in site_packages_dirs:
+    potential_path = os.path.join(site_packages_dir, 'dayu_widgets')
+    if os.path.exists(potential_path):
+        dayu_widgets_path = potential_path
+        break
 a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[("./settings.json","."),("./gui","./gui"),("./modules","./modules")],
-    hiddenimports=['dayu_widgets'],
+    datas=[("./settings.json","."),("./gui","./gui"),("./modules","./modules"),(dayu_widgets_path, "dayu_widgets")],
+    hiddenimports=[],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
@@ -26,7 +34,7 @@ exe = EXE(
     bootloader_ignore_signals=False,
     strip=False,
     upx=True,
-    console=True,
+    console=True,# 是否显示控制台
     disable_windowed_traceback=False,
     argv_emulation=False,
     target_arch=None,

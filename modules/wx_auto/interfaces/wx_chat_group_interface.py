@@ -231,7 +231,9 @@ class WxChatGroupInterface(QWidget, MFieldMixin):
     @asyncSlot()
     async def start_up(self, number=None):
         self.loading_wrapper.set_dayu_loading(True)
-        await asyncio.sleep(1)
+        for i in range(10):
+            await asyncio.sleep(1)
+            print(f"自动执行: {i}")
         self.loading_wrapper.set_dayu_loading(False)
 
     def thumbs_up(self):
