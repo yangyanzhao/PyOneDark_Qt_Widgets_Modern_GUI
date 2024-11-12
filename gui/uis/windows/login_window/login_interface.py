@@ -1,27 +1,29 @@
 import asyncio
-import random
 import sys
-from PySide2.QtCore import QRect
-from PySide2.QtGui import QIcon, QPixmap, QColor
-from PySide2.QtWidgets import QApplication, QWidget
-from dayu_widgets import MTheme
-from qasync import QEventLoop
 
-from Ui_LoginWindow import Ui_Form
-from gui.core.functions import Functions
+from PySide2.QtCore import QRect
+from PySide2.QtGui import QIcon, QPixmap, QColor, Qt
+from PySide2.QtWidgets import QApplication, QDialog, QLabel
+from dayu_widgets import MTheme, MMessage, MFieldMixin, MLineEdit, MPushButton
+from qasync import QEventLoop, asyncSlot
+
+from gui.uis.windows.login_window.Ui_LoginWindow import Ui_Form
 from gui.images import icons
+from gui.utils.data_bind_util import widget_bind_value
 
 
 def isWin11():
     return sys.platform == 'win32' and sys.getwindowsversion().build >= 22000
 
 
-class LoginWindow(QWidget, Ui_Form):
+class LoginWindow(QDialog, Ui_Form, MFieldMixin):
 
     def __init__(self):
         super().__init__()
         self.setupUi(self)
         MTheme().apply(self)
+        # 设置窗口标志，隐藏关闭按钮和问号按钮
+        self.setWindowFlags(Qt.Window | Qt.WindowTitleHint | Qt.CustomizeWindowHint)
         self.label.setScaledContents(False)
         self.setWindowTitle('蜻蜓助手')
         self.setWindowIcon(QIcon(icons['logo.svg']))
@@ -38,7 +40,97 @@ class LoginWindow(QWidget, Ui_Form):
             color = QColor(25, 33, 42)
             self.setStyleSheet(f"LoginWindow{{background: {color.name()}}}")
 
-        self.pushButton.clicked.connect(lambda: self.close())
+        self.pushButton.clicked.connect(self.on_login)
+        self.logged_in = False
+
+        # 数据绑定(账号)
+        self.lineEdit_3.set_delay_duration(millisecond=2000)  # 延迟时间（毫秒
+        widget_bind_value(parent=self, widget=self.lineEdit_3, field_name="login_username", widget_property="text",
+                          widget_signal="textChanged")
+        # 数据绑定(记住密码)
+        widget_bind_value(parent=self, widget=self.checkBox, field_name="login_remember_me", widget_property="checked",
+                          widget_signal="toggled")
+        # 退出登录按钮
+        self.quit_button = MPushButton(text='退出登录')
+        self.quit_button.clicked.connect(self.on_logout)
+        self.quit_button.setVisible(False)
+        self.verticalLayout_2.addWidget(self.quit_button)
+        if self.checkBox.isChecked():
+            # 数据绑定(密码)
+            self.lineEdit_4.set_delay_duration(millisecond=2000)  # 延迟时间（毫秒
+            widget_bind_value(parent=self, widget=self.lineEdit_4, field_name="login_password",
+                              widget_property="text", widget_signal="textChanged")
+        # 构建一个隐藏的LineEdit来放置Token，以后调试直接显示出来很方便。
+        self.line_edit_token = MLineEdit()
+        self.line_edit_token.setVisible(False)
+        self.verticalLayout_2.addWidget(self.line_edit_token)
+        # 数据绑定(Token)
+        self.line_edit_token.set_delay_duration(millisecond=2000)  # 延迟时间（毫秒
+        widget_bind_value(parent=self, widget=self.line_edit_token, field_name="login_token",
+                          widget_property="text", widget_signal="textChanged")
+        self.check_token()
+
+    @asyncSlot()
+    async def on_login(self):
+        host = self.lineEdit.text()
+        port = self.lineEdit_2.text()
+        username = self.lineEdit_3.text()
+        password = self.lineEdit_4.text()
+
+        if username == 'admin' and password == 'admin':
+            self.logged_in = True
+            MMessage.success("登录成功", parent=self)
+            # 写入Token
+            self.line_edit_token.setText("0123456789876543210")
+            self.check_token()
+            await asyncio.sleep(3)
+            self.accept()
+        else:
+            MMessage.error("登录失败", parent=self)
+
+    @asyncSlot()
+    async def on_logout(self):
+        # 清除Token
+        self.line_edit_token.setText(None)
+        self.check_token()
+
+    def check_token(self):
+        # 检测Token有效性
+        token = self.line_edit_token.text()
+        if token and True:  # 这里要进行API调用验证TODO
+            # 如果有效
+            self.lineEdit.setVisible(False)
+            self.lineEdit_2.setVisible(False)
+            self.lineEdit_3.setVisible(False)
+            self.lineEdit_4.setVisible(False)
+            self.label.setVisible(True)
+            self.label_2.setVisible(True)
+            self.label_3.setVisible(False)
+            self.label_4.setVisible(False)
+            self.label_5.setVisible(False)
+            self.label_6.setVisible(False)
+            self.checkBox.setVisible(False)
+            self.pushButton.setVisible(False)
+            self.pushButton_2.setVisible(False)
+            self.quit_button.setVisible(True)
+            return True
+        else:
+            # 如果无效
+            self.lineEdit.setVisible(True)
+            self.lineEdit_2.setVisible(True)
+            self.lineEdit_3.setVisible(True)
+            self.lineEdit_4.setVisible(True)
+            self.label.setVisible(True)
+            self.label_2.setVisible(True)
+            self.label_3.setVisible(True)
+            self.label_4.setVisible(True)
+            self.label_5.setVisible(True)
+            self.label_6.setVisible(True)
+            self.checkBox.setVisible(True)
+            self.pushButton.setVisible(True)
+            self.pushButton_2.setVisible(True)
+            self.quit_button.setVisible(False)
+            return False
 
     def resizeEvent(self, e):
         super().resizeEvent(e)

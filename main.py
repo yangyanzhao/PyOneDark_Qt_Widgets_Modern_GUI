@@ -4,6 +4,8 @@
 import asyncio
 
 import qasync
+
+from gui.uis.windows.login_window.login_interface import LoginWindow
 from gui.uis.windows.main_window.functions_main_window import *
 import os
 
@@ -100,6 +102,12 @@ class MainWindow(QMainWindow):
 
         # 左侧底部 信息 BTN
         if btn.objectName() == "btn_info" or btn.objectName() == "btn_close_left_column_info":
+            if btn.objectName() == "btn_info":
+                self.login_window = LoginWindow()
+                check_token = self.login_window.check_token()
+                if not check_token:
+                    # 如果Token无效则弹出登录窗口
+                    self.login_window.exec_()
             # CHECK IF LEFT COLUMN IS VISIBLE
             if not MainFunctions.left_column_info_is_visible(self):
                 self.ui.left_menu.select_only_one_tab(btn.objectName())

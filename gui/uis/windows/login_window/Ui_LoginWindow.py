@@ -93,7 +93,6 @@ class Ui_Form(object):
         spacerItem2 = QtWidgets.QSpacerItem(20, 5, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
         self.verticalLayout_2.addItem(spacerItem2)
         self.checkBox = MCheckBox()
-        self.checkBox.setChecked(True)
         self.checkBox.setObjectName("checkBox")
         self.verticalLayout_2.addWidget(self.checkBox)
         spacerItem3 = QtWidgets.QSpacerItem(20, 5, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
@@ -127,6 +126,3 @@ class Ui_Form(object):
         self.checkBox.setText(_translate("Form", "记住密码"))
         self.pushButton.setText(_translate("Form", "登录"))
         self.pushButton_2.setText(_translate("Form", "找回密码"))
-
-
-import resource_rc
