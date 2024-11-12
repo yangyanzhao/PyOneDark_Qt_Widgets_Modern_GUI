@@ -19,7 +19,10 @@ icons = {}
 
 # 遍历文件夹中的所有文件
 for filename in os.listdir(current_directory):
-    if filename.endswith('.png') or filename.endswith('.svg'):
+    if filename.endswith('.png') \
+            or filename.endswith('.svg') \
+            or filename.endswith('.jpg') \
+            or filename.endswith('.jpeg'):
         # 获取文件的完整路径
         file_path = os.path.join(current_directory, filename)
         # 将文件路径存储在字典中，键为文件名
