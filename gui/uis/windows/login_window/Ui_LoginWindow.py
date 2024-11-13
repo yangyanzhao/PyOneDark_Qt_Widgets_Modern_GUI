@@ -15,7 +15,6 @@ class Ui_Form(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.label = QtWidgets.QLabel(Form)
         self.label.setText("")
-        self.label.setPixmap(QtGui.QPixmap(icons['background_0.jpg']))
         self.label.setScaledContents(True)
         self.label.setObjectName("label")
         self.horizontalLayout.addWidget(self.label)

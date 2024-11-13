@@ -9,7 +9,7 @@ from gui.images import icons
 from gui.widgets import PyTitleBar, PyGrips
 
 
-class FramelessWindowWrapper(QWidget):
+class FramelessDialogWrapper(QDialog):
     def __init__(self, target_widget: QWidget, has_title_bar=True, attach_title_bar_layout: QVBoxLayout = None):
         """
         窗口包装器
@@ -153,7 +153,7 @@ if __name__ == '__main__':
     asyncio.set_event_loop(loop)
     # 创建窗口
     demo_window = DemoWindow()
-    demo_window_wrapper = FramelessWindowWrapper(target_widget=demo_window, has_title_bar=True)
+    demo_window_wrapper = FramelessDialogWrapper(target_widget=demo_window, has_title_bar=True)
     # 显示窗口
     demo_window_wrapper.show()
     with loop:

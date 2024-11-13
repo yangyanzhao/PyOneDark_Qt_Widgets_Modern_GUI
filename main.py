@@ -10,6 +10,9 @@ from gui.uis.windows.main_window.functions_main_window import *
 import os
 
 from gui.utils.file_lock import FileLock
+from gui.utils.frameless_dialog_wrapper import FramelessDialogWrapper
+from gui.utils.frameless_window_wrapper import FramelessWindowWrapper
+from gui.utils.position_util import center_point_alignment
 from gui.utils.system_tray import SystemTrayTool
 from qt_core import *
 from gui.core.json_settings import Settings
@@ -49,7 +52,9 @@ class MainWindow(QMainWindow):
         SetupMainWindow.setup_gui(self)
 
         # 初始化登录窗口，但是不显示，处于隐藏状态。
-        self.login_window = LoginWindow()
+        login_window = LoginWindow(self)
+        self.login_dialog_wrapper = FramelessDialogWrapper(login_window)
+        login_window.set_wrapper(self.login_dialog_wrapper)
         # 显示 窗口
         # ///////////////////////////////////////////////////////////////
         self.show()
@@ -60,10 +65,11 @@ class MainWindow(QMainWindow):
     def btn_clicked(self):
         if self.settings['login_interceptor']:
             # 按钮点击菜单按钮，回去检测Token是否正确
-            check_token = self.login_window.check_token()
+            check_token = self.login_dialog_wrapper.target_widget.check_token()
             if not check_token:
                 # 如果Token无效则弹出登录窗口
-                exec_ = self.login_window.exec_()
+                center_point_alignment(self, self.login_dialog_wrapper)
+                exec_ = self.login_dialog_wrapper.exec_()
                 if not exec_:
                     # 回到主页
                     self.ui.left_menu.select_only_one("btn_home")
