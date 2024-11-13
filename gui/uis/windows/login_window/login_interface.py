@@ -2,7 +2,7 @@ import asyncio
 import sys
 
 from PySide2.QtCore import QRect
-from PySide2.QtGui import QIcon, QPixmap, QColor, Qt
+from PySide2.QtGui import QIcon, QPixmap, QColor, Qt, QCloseEvent
 from PySide2.QtWidgets import QApplication, QDialog, QLabel
 from dayu_widgets import MTheme, MMessage, MFieldMixin, MLineEdit, MPushButton
 from qasync import QEventLoop, asyncSlot
@@ -23,7 +23,7 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
         self.setupUi(self)
         MTheme().apply(self)
         # 设置窗口标志，隐藏关闭按钮和问号按钮
-        self.setWindowFlags(Qt.Window | Qt.WindowTitleHint | Qt.CustomizeWindowHint)
+        self.setWindowFlags(Qt.Window | Qt.WindowCloseButtonHint)
         self.label.setScaledContents(False)
         self.setWindowTitle('蜻蜓助手')
         self.setWindowIcon(QIcon(icons['logo.svg']))
@@ -34,6 +34,10 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
 
         # 设置窗口初始大小为背景图像的尺寸
         self.resize(1066, 600)
+        self.setMinimumWidth(1066)
+        self.setMaximumWidth(1066)
+        self.setMinimumHeight(600)
+        self.setMaximumHeight(600)
         self.update_background()
 
         if not isWin11():
@@ -83,8 +87,6 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
             # 写入Token
             self.line_edit_token.setText("0123456789876543210")
             self.check_token()
-            await asyncio.sleep(3)
-            self.accept()
         else:
             MMessage.error("登录失败", parent=self)
 
@@ -99,6 +101,7 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
         token = self.line_edit_token.text()
         if token and True:  # 这里要进行API调用验证TODO
             # 如果有效
+            self.logged_in = True
             self.lineEdit.setVisible(False)
             self.lineEdit_2.setVisible(False)
             self.lineEdit_3.setVisible(False)
@@ -116,6 +119,7 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
             return True
         else:
             # 如果无效
+            self.logged_in = False
             self.lineEdit.setVisible(True)
             self.lineEdit_2.setVisible(True)
             self.lineEdit_3.setVisible(True)
@@ -159,6 +163,13 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
 
     def systemTitleBarRect(self, size):
         return QRect(size.width() - 75, 0, 75, size.height())
+
+    def closeEvent(self, arg__1: QCloseEvent) -> None:
+        if self.logged_in:
+            self.accept()
+        else:
+            self.reject()
+        super(LoginWindow, self).closeEvent(arg__1)
 
 
 if __name__ == '__main__':

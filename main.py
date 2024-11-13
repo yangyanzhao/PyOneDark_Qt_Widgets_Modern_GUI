@@ -48,6 +48,8 @@ class MainWindow(QMainWindow):
         self.hide_grips = True  # 显示/隐藏调整大小边缘点
         SetupMainWindow.setup_gui(self)
 
+        # 初始化登录窗口，但是不显示，处于隐藏状态。
+        self.login_window = LoginWindow()
         # 显示 窗口
         # ///////////////////////////////////////////////////////////////
         self.show()
@@ -56,6 +58,16 @@ class MainWindow(QMainWindow):
     # 按钮点击时运行
     # 按objectName/btn_id检查函数
     def btn_clicked(self):
+        # 按钮点击菜单按钮，回去检测Token是否正确
+        check_token = self.login_window.check_token()
+        if not check_token:
+            # 如果Token无效则弹出登录窗口
+            exec_ = self.login_window.exec_()
+            if not exec_:
+                # 回到主页
+                self.ui.left_menu.select_only_one("btn_home")
+                MainFunctions.set_page(self, self.ui.load_pages.page_1)
+                return
         # 获取被点击的按钮
         btn = SetupMainWindow.setup_btns(self)
 
@@ -102,12 +114,6 @@ class MainWindow(QMainWindow):
 
         # 左侧底部 信息 BTN
         if btn.objectName() == "btn_info" or btn.objectName() == "btn_close_left_column_info":
-            if btn.objectName() == "btn_info":
-                self.login_window = LoginWindow()
-                check_token = self.login_window.check_token()
-                if not check_token:
-                    # 如果Token无效则弹出登录窗口
-                    self.login_window.exec_()
             # CHECK IF LEFT COLUMN IS VISIBLE
             if not MainFunctions.left_column_info_is_visible(self):
                 self.ui.left_menu.select_only_one_tab(btn.objectName())

@@ -6,21 +6,24 @@ from dayu_widgets import MPushButton, MTheme
 
 
 class UserInformationWidget(QWidget):
-    def __init__(self, widget_name):
+    def __init__(self, parent=None):
+        self.parent = parent
         super(UserInformationWidget, self).__init__()
-        self.widget_name = widget_name
+        MTheme(theme="dark").apply(self)
         self.init_ui()
 
     def init_ui(self):
         self.layout = QVBoxLayout(self)
         self.setLayout(self.layout)
-        self.label = QLabel(
-            f"<center><span style='font-size: 80px; color: #4F9FEE;'>{self.widget_name}</span></center>")
+        self.button_logout = MPushButton(text="退出登录")
+        self.button_logout.clicked.connect(self.logout)
         self.button = MPushButton(text="Click Me")
-        MTheme(theme="dark").apply(self.button)
         self.button.setMaximumHeight(40)
-        self.layout.addWidget(self.label)
+        self.layout.addWidget(self.button_logout)
         self.layout.addWidget(self.button)
+
+    def logout(self):
+        self.parent.login_window.on_logout()
 
 
 if __name__ == "__main__":

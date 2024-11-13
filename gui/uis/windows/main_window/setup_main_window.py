@@ -36,6 +36,7 @@ from .ui_main import *
 # ///////////////////////////////////////////////////////////////
 from .functions_main_window import *
 from ..left_column_menus_window.settings_base import SettingBaseInterface
+from ..left_column_menus_window.user_information import UserInformationWidget
 
 
 # PY WINDOW
@@ -239,8 +240,8 @@ class SetupMainWindow:
 
         # 自定义 左列 信息菜单 TODO
         # ///////////////////////////////////////////////////////////////
-        widget_zhi = WidgetFactory(widget_name="1智")
-        self.ui.left_column_info.menus.menus.addWidget(widget_zhi)
+        user_information_widget = UserInformationWidget(self)
+        self.ui.left_column_info.menus.menus.addWidget(user_information_widget)
         widget_xin = WidgetFactory(widget_name="2信")
         self.ui.left_column_info.menus.menus.addWidget(widget_xin)
         widget_ren = WidgetFactory(widget_name="3仁")
@@ -250,11 +251,11 @@ class SetupMainWindow:
         widget_yan = WidgetFactory(widget_name="5严")
         self.ui.left_column_info.menus.menus.addWidget(widget_yan)
 
-        widget_zhi.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(widget_xin))
+        user_information_widget.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(widget_xin))
         widget_xin.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(widget_ren))
         widget_ren.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(widget_yong))
         widget_yong.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(widget_yan))
-        widget_yan.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(widget_zhi))
+        widget_yan.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(user_information_widget))
 
         # 自定义 左列 设置菜单 TODO
         # ///////////////////////////////////////////////////////////////
