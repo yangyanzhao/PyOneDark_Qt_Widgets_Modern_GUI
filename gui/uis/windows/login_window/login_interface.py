@@ -3,27 +3,144 @@ import sys
 
 from PySide2.QtCore import QRect
 from PySide2.QtGui import QIcon, QPixmap, QColor, Qt, QCloseEvent
-from PySide2.QtWidgets import QApplication, QDialog, QLabel
+from PySide2.QtWidgets import QApplication, QDialog, QLabel, QFrame, QVBoxLayout, QWidget
 from dayu_widgets import MTheme, MMessage, MFieldMixin, MLineEdit, MPushButton
 from qasync import QEventLoop, asyncSlot
 
+from gui.core.json_settings import Settings
+from gui.core.json_themes import Themes
 from gui.uis.windows.login_window.Ui_LoginWindow import Ui_Form
 from gui.images import icons
 from gui.utils.data_bind_util import widget_bind_value
+from gui.utils.frameless_window_wrapper import FramelessWindowWrapper
+from gui.widgets import PyTitleBar, PyGrips
 
 
 def isWin11():
     return sys.platform == 'win32' and sys.getwindowsversion().build >= 22000
 
 
+# class LoginWindowWrapper(QWidget):
+#     def __init__(self, target_widget: QWidget):
+#         super().__init__()
+#         self.setWindowFlag(Qt.FramelessWindowHint)
+#         self.setAttribute(Qt.WA_TranslucentBackground)
+#         self.center_widget = QWidget()
+#         self.center_widget.setObjectName("center_widget")
+#         self.layout = QVBoxLayout(self)
+#         self.layout.setContentsMargins(0, 0, 0, 0)
+#         self.layout.setSpacing(0)
+#         self.layout.addWidget(self.center_widget)
+#
+#         # 初始化主题和配置
+#         themes = Themes()
+#         self.themes = themes.items
+#         settings = Settings()
+#         self.settings = settings.items
+#
+#         # 自定义标题栏
+#         self.title_bar_frame = QFrame()
+#         self.title_bar_frame.setMinimumHeight(40)
+#         self.title_bar_frame.setMaximumHeight(40)
+#         self.title_bar_layout = QVBoxLayout(self.title_bar_frame)
+#         self.title_bar_layout.setContentsMargins(0, 0, 0, 0)
+#
+#         # 标题栏
+#         self.title_bar = PyTitleBar(
+#             self,
+#             logo_width=100,
+#             app_parent=self,
+#             logo_image="logo_top_100x22.svg",
+#             bg_color=self.themes["app_color"]["bg_two"],
+#             div_color=self.themes["app_color"]["bg_three"],
+#             btn_bg_color=self.themes["app_color"]["bg_two"],
+#             btn_bg_color_hover=self.themes["app_color"]["bg_three"],
+#             btn_bg_color_pressed=self.themes["app_color"]["bg_one"],
+#             icon_color=self.themes["app_color"]["icon_color"],
+#             icon_color_hover=self.themes["app_color"]["icon_hover"],
+#             icon_color_pressed=self.themes["app_color"]["icon_pressed"],
+#             icon_color_active=self.themes["app_color"]["icon_active"],
+#             context_color=self.themes["app_color"]["context_color"],
+#             dark_one=self.themes["app_color"]["dark_one"],
+#             text_foreground=self.themes["app_color"]["text_foreground"],
+#             radius=8,
+#             radius_corners=[1, 2],
+#             font_family=self.settings["font"]["family"],
+#             title_size=self.settings["font"]["title_size"],
+#             is_custom_title_bar=self.settings["custom_title_bar"]
+#         )
+#         self.title_bar_layout.addWidget(self.title_bar)
+#         self.layout.insertWidget(0, self.title_bar_frame)
+#
+#         style = f"""
+#                 #center_widget {{
+#                     border-bottom-left-radius: 10px;
+#                     border-bottom-right-radius: 10px;
+#                     background-color: '{self.themes["app_color"]["bg_three"]}';
+#                 }}
+#                 """
+#         self.center_widget.setStyleSheet(style)
+#         self.center_layout = QVBoxLayout(self)
+#         self.center_layout.setContentsMargins(5, 5, 5, 5)
+#         self.center_widget.setLayout(self.center_layout)
+#
+#         # 调整边缘缩放
+#         self.hide_grips = True  # 显示/隐藏调整大小边缘点
+#         if self.settings["custom_title_bar"]:
+#             self.left_grip = PyGrips(self, "left", self.hide_grips)
+#             self.right_grip = PyGrips(self, "right", self.hide_grips)
+#             self.top_grip = PyGrips(self, "top", self.hide_grips)
+#             self.bottom_grip = PyGrips(self, "bottom", self.hide_grips)
+#             self.top_left_grip = PyGrips(self, "top_left", self.hide_grips)
+#             self.top_right_grip = PyGrips(self, "top_right", self.hide_grips)
+#             self.bottom_left_grip = PyGrips(self, "bottom_left", self.hide_grips)
+#             self.bottom_right_grip = PyGrips(self, "bottom_right", self.hide_grips)
+#
+#         # 放置目标窗口
+#         self.center_layout.addWidget(target_widget)
+#
+#     def resizeEvent(self, e):
+#         super().resizeEvent(e)
+#         self.left_grip.setGeometry(0, 10, 10, self.height() - 5)
+#         self.right_grip.setGeometry(self.width() - 10, 0, 10, self.height() + 5)
+#         self.top_grip.setGeometry(5, 0, self.width() - 10, 10)
+#         self.bottom_grip.setGeometry(0, self.height() - 10, self.width() - 10, 10)
+#
+#         self.top_left_grip.setGeometry(0, 0, 15, 15)
+#         self.top_right_grip.setGeometry(self.width() - 15, 0, 15, 15)
+#         self.bottom_left_grip.setGeometry(0, self.height() - 15, 15, 15)
+#         self.bottom_right_grip.setGeometry(self.width() - 15, self.height() - 15, 15, 15)
+#
+#     # 鼠标点击事件
+#     def mousePressEvent(self, event):
+#         # SET DRAG POS WINDOW
+#         self.dragPos = event.globalPos()
+
+
 class LoginWindow(QDialog, Ui_Form, MFieldMixin):
 
-    def __init__(self):
+    def __init__(self, parent=None):
         super().__init__()
         self.setupUi(self)
-        MTheme().apply(self)
-        # 设置窗口标志，隐藏关闭按钮和问号按钮
-        self.setWindowFlags(Qt.Window | Qt.WindowCloseButtonHint)
+        themes = Themes()
+        self.themes = themes.items
+        settings = Settings()
+        self.settings = settings.items
+        MTheme(theme="dark").apply(self)
+        m_theme = MTheme()
+        m_theme.set_theme(theme="light" if self.themes['theme_name'] == "bright" else "dark")
+        # 自定义主题
+        m_theme.title_color = self.themes["app_color"]["text_title"]
+        m_theme.primary_text_color = self.themes["app_color"]["text_foreground"]
+        m_theme.secondary_text_color = self.themes["app_color"]["text_description"]
+
+        m_theme.background_color = self.themes["app_color"]["bg_three"]
+        m_theme.background_selected_color = "#292929"
+        m_theme.background_in_color = self.themes["app_color"]["bg_two"]
+        m_theme.background_out_color = self.themes["app_color"]["bg_one"]
+        # 应用到当前组件
+        m_theme.apply(self)
+
         self.label.setScaledContents(False)
         self.setWindowTitle('蜻蜓助手')
         self.setWindowIcon(QIcon(icons['logo.svg']))
@@ -34,10 +151,6 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
 
         # 设置窗口初始大小为背景图像的尺寸
         self.resize(1066, 600)
-        self.setMinimumWidth(1066)
-        self.setMaximumWidth(1066)
-        self.setMinimumHeight(600)
-        self.setMaximumHeight(600)
         self.update_background()
 
         if not isWin11():
@@ -161,9 +274,6 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
         # 设置背景图像
         self.label.setPixmap(scaled_pixmap)
 
-    def systemTitleBarRect(self, size):
-        return QRect(size.width() - 75, 0, 75, size.height())
-
     def closeEvent(self, arg__1: QCloseEvent) -> None:
         if self.logged_in:
             self.accept()
@@ -179,8 +289,10 @@ if __name__ == '__main__':
     loop = QEventLoop(app)
     asyncio.set_event_loop(loop)
     # 创建窗口
+
     login_window = LoginWindow()
-    # 显示窗口
-    login_window.show()
+    login_window_wrapper = FramelessWindowWrapper(target_widget=login_window, has_title_bar=True,
+                                                  attach_title_bar_layout=login_window.verticalLayout_1)
+    login_window_wrapper.show()
     with loop:
         loop.run_forever()

@@ -3,8 +3,9 @@
     "version" : "v1.0.0",
     "copyright" : "By: Wanderson M. Pimenta",
     "year" : 2021,
-    "theme_name" : "default",
+    "theme_name" : "bright",
     "custom_title_bar": true,
+    "login_interceptor": true,
     "startup_size": [
         1400,
         720

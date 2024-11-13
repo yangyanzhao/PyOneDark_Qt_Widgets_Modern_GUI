@@ -58,16 +58,17 @@ class MainWindow(QMainWindow):
     # 按钮点击时运行
     # 按objectName/btn_id检查函数
     def btn_clicked(self):
-        # 按钮点击菜单按钮，回去检测Token是否正确
-        check_token = self.login_window.check_token()
-        if not check_token:
-            # 如果Token无效则弹出登录窗口
-            exec_ = self.login_window.exec_()
-            if not exec_:
-                # 回到主页
-                self.ui.left_menu.select_only_one("btn_home")
-                MainFunctions.set_page(self, self.ui.load_pages.page_1)
-                return
+        if self.settings['login_interceptor']:
+            # 按钮点击菜单按钮，回去检测Token是否正确
+            check_token = self.login_window.check_token()
+            if not check_token:
+                # 如果Token无效则弹出登录窗口
+                exec_ = self.login_window.exec_()
+                if not exec_:
+                    # 回到主页
+                    self.ui.left_menu.select_only_one("btn_home")
+                    MainFunctions.set_page(self, self.ui.load_pages.page_1)
+                    return
         # 获取被点击的按钮
         btn = SetupMainWindow.setup_btns(self)
 

@@ -31,7 +31,11 @@ class Ui_Form(object):
                                   "    font: 13px \'Microsoft YaHei\'\n"
                                   "}")
         self.widget.setObjectName("widget")
-        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout_1 = QtWidgets.QVBoxLayout(self.widget)
+        self.verticalLayout_1.setContentsMargins(5, 0, 0, 0)
+        self.verticalLayout_1.setSpacing(0)
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout()
+        self.verticalLayout_1.addLayout(self.verticalLayout_2)
         self.verticalLayout_2.setContentsMargins(20, 20, 20, 20)
         self.verticalLayout_2.setSpacing(9)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
