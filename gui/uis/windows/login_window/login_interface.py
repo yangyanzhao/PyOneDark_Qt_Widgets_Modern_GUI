@@ -6,6 +6,7 @@ from PySide2.QtWidgets import QApplication, QDialog, QLabel, QFrame, QVBoxLayout
 from dayu_widgets import MTheme, MMessage, MFieldMixin, MLineEdit, MPushButton
 from qasync import QEventLoop, asyncSlot
 
+from api.auth import api_login
 from gui.core.json_settings import Settings
 from gui.core.json_themes import Themes
 from gui.uis.windows.login_window.Ui_LoginWindow import Ui_Form
@@ -98,12 +99,14 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
         port = self.lineEdit_2.text()
         username = self.lineEdit_3.text()
         password = self.lineEdit_4.text()
-
-        if username == 'admin' and password == 'admin':
+        result = api_login(username, password)
+        if result['code'] == 200:
             self.logged_in = True
-            MMessage.success("登录成功", parent=self.wrapper)
+            MMessage.success(result['msg'], parent=self.wrapper)
             # 写入Token
-            self.line_edit_token.setText("0123456789876543210")
+            self.line_edit_token.setText(result['token'])
+            # TODO 写入用户数据
+            print(result)
             self.check_token()
         else:
             MMessage.error("登录失败", parent=self.wrapper)
