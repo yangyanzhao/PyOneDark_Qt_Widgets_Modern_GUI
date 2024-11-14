@@ -5,8 +5,16 @@ import aiohttp
 from PySide2.QtCore import QRectF, Qt, QSize, QTimer, QPropertyAnimation, \
     QPointF, Property, QBuffer
 from PySide2.QtGui import QPixmap, QColor, QPainter, QPainterPath, QMovie
-from PySide2.QtWidgets import QWidget, QApplication, QVBoxLayout, QHBoxLayout
+from PySide2.QtWidgets import QWidget, QApplication, QHBoxLayout
 from qasync import QEventLoop, asyncSlot
+
+Circle = 0  # 圆圈
+Rectangle = 1  # 圆角矩形
+SizeLarge = QSize(128, 128)
+SizeMedium = QSize(64, 64)
+SizeSmall = QSize(32, 32)
+StartAngle = 0  # 起始旋转角度
+EndAngle = 360  # 结束旋转角度
 
 
 class CAvatar(QWidget):
@@ -18,8 +26,23 @@ class CAvatar(QWidget):
     StartAngle = 0  # 起始旋转角度
     EndAngle = 360  # 结束旋转角度
 
-    def __init__(self, *args, shape=0, url='', cacheDir=False, size=QSize(64, 64), animation=False, **kwargs):
+    def __init__(self, *args, shape=0, url='', cacheDir=False, size=QSize(64, 64), is_OD=False, animation=False,
+                 parent=None,
+                 **kwargs):
+        """
+
+        :param args:
+        :param shape:
+        :param url:
+        :param cacheDir:
+        :param size:
+        :param is_ODD: 是否原图绘制，不剪裁。
+        :param animation:
+        :param kwargs:
+        """
         super(CAvatar, self).__init__(*args, **kwargs)
+        self.is_OD = is_OD
+        self.parent = parent
         self.url = ''
         self._angle = 0  # 角度
         self.pradius = 0  # 加载进度条半径
@@ -46,32 +69,48 @@ class CAvatar(QWidget):
         painter.setRenderHint(QPainter.SmoothPixmapTransform, True)
         # 绘制
         path = QPainterPath()
-        diameter = min(self.width(), self.height())
-        if self.shape == self.Circle:
-            radius = int(diameter / 2)
-        elif self.shape == self.Rectangle:
-            radius = 4
-        halfW = self.width() / 2
-        halfH = self.height() / 2
-        painter.translate(halfW, halfH)
-        path.addRoundedRect(
-            QRectF(-halfW, -halfH, diameter, diameter), radius, radius)
-        painter.setClipPath(path)
-        # 如果是动画效果
-        if self.rotateAnimation.state() == QPropertyAnimation.Running:
-            painter.rotate(self._angle)  # 旋转
-            painter.drawPixmap(
-                QPointF(-self.pixmap.width() / 2, -self.pixmap.height() / 2), self.pixmap)
+        if not self.is_OD:
+            diameter = min(self.width(), self.height())
+            if self.shape == self.Circle:
+                radius = int(diameter / 2)
+            elif self.shape == self.Rectangle:
+                radius = 4
+            halfW = self.width() / 2
+            halfH = self.height() / 2
+            painter.translate(halfW, halfH)
+            path.addRoundedRect(
+                QRectF(-halfW, -halfH, diameter, diameter), radius, radius)
+            painter.setClipPath(path)
+            # 如果是动画效果
+            if self.rotateAnimation.state() == QPropertyAnimation.Running:
+                painter.rotate(self._angle)  # 旋转
+                painter.drawPixmap(
+                    QPointF(-self.pixmap.width() / 2, -self.pixmap.height() / 2), self.pixmap)
+            else:
+                painter.drawPixmap(-int(halfW), -int(halfH), self.pixmap)
+            # 如果在加载
+            if self.loadingTimer.isActive():
+                diameter = 2 * self.pradius
+                painter.setBrush(
+                    QColor(45, 140, 240, int((1 - self.pradius / 10) * 255)))
+                painter.setPen(Qt.NoPen)
+                painter.drawRoundedRect(
+                    QRectF(-self.pradius, -self.pradius, diameter, diameter), self.pradius, self.pradius)
         else:
-            painter.drawPixmap(-int(halfW), -int(halfH), self.pixmap)
-        # 如果在加载
-        if self.loadingTimer.isActive():
-            diameter = 2 * self.pradius
-            painter.setBrush(
-                QColor(45, 140, 240, int((1 - self.pradius / 10) * 255)))
-            painter.setPen(Qt.NoPen)
-            painter.drawRoundedRect(
-                QRectF(-self.pradius, -self.pradius, diameter, diameter), self.pradius, self.pradius)
+            if self.rotateAnimation.state() == QPropertyAnimation.Running:
+                painter.rotate(self._angle)  # 旋转
+                painter.drawPixmap(
+                    QPointF(-self.pixmap.width() / 2, -self.pixmap.height() / 2), self.pixmap)
+            else:
+                painter.drawPixmap(0, 0, self.width(), self.height(), self.pixmap)
+            # 如果在加载
+            if self.loadingTimer.isActive():
+                diameter = 2 * self.pradius
+                painter.setBrush(
+                    QColor(45, 140, 240, int((1 - self.pradius / 10) * 255)))
+                painter.setPen(Qt.NoPen)
+                painter.drawRoundedRect(
+                    QRectF(-self.pradius, -self.pradius, diameter, diameter), self.pradius, self.pradius)
 
     def enterEvent(self, event):
         """鼠标进入动画

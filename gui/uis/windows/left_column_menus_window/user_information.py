@@ -1,38 +1,106 @@
+import qasync
+from dayu_widgets import MPushButton, MTheme
 import asyncio
 
-import qasync
-from PySide2.QtWidgets import QWidget, QVBoxLayout, QLabel, QApplication
-from dayu_widgets import MPushButton, MTheme
+from PySide2.QtCore import Qt, QSize
+from PySide2.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout
+from dayu_widgets import MLabel
 
+from modules.wx_auto.custom_widget.CAvatar import CAvatar
 from gui.utils.position_util import center_point_alignment
+
+
+class InforWidget(QWidget):
+    def __init__(self, avatar: CAvatar = None, name: str = None, value: str = None):
+        super(InforWidget, self).__init__()
+        self.layout = QVBoxLayout(self)
+        self.layout.setAlignment(Qt.AlignCenter)
+        i = 0
+        if avatar:
+            qh_box_layout = QHBoxLayout()
+            qh_box_layout.addWidget(avatar)
+            qh_box_layout.setAlignment(Qt.AlignCenter)
+            self.layout.addLayout(qh_box_layout)
+
+        if name:
+            q_label_name = MLabel(name)
+            q_label_name.setWordWrap(True)
+            q_label_name.setAlignment(Qt.AlignCenter)
+            self.layout.addWidget(q_label_name)
+        if value:
+            q_label_value = MLabel(value)
+            q_label_value.setWordWrap(True)
+            q_label_value.setAlignment(Qt.AlignCenter)
+            self.layout.addWidget(q_label_value)
 
 
 class UserInformationWidget(QWidget):
     def __init__(self, parent=None):
+        super().__init__()
         self.parent = parent
-        super(UserInformationWidget, self).__init__()
+        self.setWindowTitle("个人中心")
         MTheme(theme="dark").apply(self)
-        self.init_ui()
 
-    def init_ui(self):
-        self.layout = QVBoxLayout(self)
-        self.setLayout(self.layout)
+        # 主布局-垂直
+        self.main_layout = QVBoxLayout(self)
+        # 头像
+        self.avatar_layout = QHBoxLayout(self)
+        c_avatar = CAvatar(shape=CAvatar.Rectangle, size=QSize(200, 150),
+                           url='https://pic.616pic.com/bg_w1180/00/03/83/6LtknTYMft.jpg', is_OD=True,
+                           animation=False, parent=self)
+        self.avatar_layout.addWidget(c_avatar)
+        # 部门 职务 年资
+        self.post_layout = QHBoxLayout(self)
+        self.post_layout.addWidget(InforWidget(
+            name=f"<span style='color: #7bb8d7;font-family: KaiTi;font-size: 14px; font-weight: bold;'>部门</span>",
+            value="HCP实施部"))
+        self.post_layout.addWidget(InforWidget(
+            name=f"<span style='color: #7bb8d7;font-family: KaiTi;font-size: 14px; font-weight: bold;'>职务</span>",
+            value="经理"))
+        self.post_layout.addWidget(InforWidget(
+            name=f"<span style='color: #7bb8d7;font-family: KaiTi;font-size: 14px; font-weight: bold;'>年资</span>",
+            value="2年"))
+        self.post_layout.setStretch(0, 1)
+        self.post_layout.setStretch(1, 1)
+        self.post_layout.setStretch(2, 1)
+        # 手机 地址
+        self.phone_address_layout = QHBoxLayout(self)
+        c_avatar_phone = CAvatar(shape=CAvatar.Circle, size=CAvatar.SizeSmall,
+                                 url='https://www.thiswaifudoesnotexist.net/example-1000.jpg')
+        self.phone_address_layout.addWidget(InforWidget(avatar=c_avatar_phone,
+                                                        name=f"<span style='color: #808080;font-family: KaiTi;font-size: 14px;'>手机</span>",
+                                                        value="13888888888"))
+        c_avatar_address = CAvatar(shape=CAvatar.Circle, size=CAvatar.SizeSmall,
+                                   url='https://www.thiswaifudoesnotexist.net/example-1000.jpg')
+        self.phone_address_layout.addWidget(
+            InforWidget(avatar=c_avatar_address,
+                        name=f"<span style='color: #808080;font-family: KaiTi;font-size: 14px;'>住址</span>",
+                        value="江苏省苏州市国际科技园B402"))
+        self.phone_address_layout.setStretch(0, 1)
+        self.phone_address_layout.setStretch(1, 1)
+
+        self.rout_layout = QHBoxLayout(self)
         self.button_logout = MPushButton(text="登录")
         self.button_logout.clicked.connect(self.logout)
-        self.button = MPushButton(text="Click Me")
-        self.button.setMaximumHeight(40)
-        self.layout.addWidget(self.button_logout)
-        self.layout.addWidget(self.button)
+        self.rout_layout.addWidget(self.button_logout)
+
+        # 设置主布局
+        self.setLayout(self.main_layout)
+        self.main_layout.addLayout(self.avatar_layout)
+        self.main_layout.addLayout(self.post_layout)
+        self.main_layout.addLayout(self.phone_address_layout)
+        self.main_layout.addLayout(self.rout_layout)
+        self.main_layout.addStretch()
 
     def logout(self):
-        center_point_alignment(self.parent, self.parent.login_dialog_wrapper)
-        self.parent.login_dialog_wrapper.exec_()
+        if self.parent:
+            center_point_alignment(self.parent, self.parent.login_dialog_wrapper)
+            self.parent.login_dialog_wrapper.exec_()
 
 
 if __name__ == "__main__":
     # 创建主循环
     app = QApplication()
-
     # 创建异步事件循环
     loop = qasync.QEventLoop(app)
     asyncio.set_event_loop(loop)

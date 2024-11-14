@@ -251,7 +251,6 @@ class SetupMainWindow:
         widget_yan = WidgetFactory(widget_name="5严")
         self.ui.left_column_info.menus.menus.addWidget(widget_yan)
 
-        user_information_widget.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(widget_xin))
         widget_xin.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(widget_ren))
         widget_ren.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(widget_yong))
         widget_yong.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(widget_yan))
