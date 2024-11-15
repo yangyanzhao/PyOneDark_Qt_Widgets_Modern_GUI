@@ -47,7 +47,7 @@ class UserInformationWidget(QWidget):
         # 头像
         self.avatar_layout = QHBoxLayout(self)
         c_avatar = CAvatar(shape=CAvatar.Rectangle, size=QSize(200, 150),
-                           url='https://pic.616pic.com/bg_w1180/00/03/83/6LtknTYMft.jpg', is_OD=True,
+                           url='https://pic.netbian.com/uploads/allimg/231016/223346-16974668265cf4.jpg', is_OD=True,
                            animation=False, parent=self)
         self.avatar_layout.addWidget(c_avatar)
         # 部门 职务 年资
@@ -80,10 +80,14 @@ class UserInformationWidget(QWidget):
         self.phone_address_layout.setStretch(0, 1)
         self.phone_address_layout.setStretch(1, 1)
 
-        self.rout_layout = QHBoxLayout(self)
+        self.rout_layout = QVBoxLayout(self)
         self.button_logout = MPushButton(text="登录")
         self.button_logout.clicked.connect(self.logout)
         self.rout_layout.addWidget(self.button_logout)
+
+        self.login_list_layout = QVBoxLayout(self)
+        self.button_login_list = MPushButton(text="在线列表")
+        self.login_list_layout.addWidget(self.button_login_list)
 
         # 设置主布局
         self.setLayout(self.main_layout)
@@ -92,6 +96,7 @@ class UserInformationWidget(QWidget):
         self.main_layout.addLayout(self.phone_address_layout)
         self.main_layout.addLayout(self.rout_layout)
         self.main_layout.addStretch()
+        self.main_layout.addLayout(self.login_list_layout)
 
     def logout(self):
         if self.parent:

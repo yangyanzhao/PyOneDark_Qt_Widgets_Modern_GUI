@@ -55,6 +55,7 @@ class MainWindow(QMainWindow):
         login_window = LoginWindow(self)
         self.login_dialog_wrapper = FramelessDialogWrapper(login_window)
         login_window.set_wrapper(self.login_dialog_wrapper)
+        login_window.check_token()
         # 显示 窗口
         # ///////////////////////////////////////////////////////////////
         self.show()
@@ -67,14 +68,7 @@ class MainWindow(QMainWindow):
             # 按钮点击菜单按钮，回去检测Token是否正确
             check_token = self.login_dialog_wrapper.target_widget.check_token()
             if not check_token:
-                # 如果Token无效则弹出登录窗口
-                center_point_alignment(self, self.login_dialog_wrapper)
-                exec_ = self.login_dialog_wrapper.exec_()
-                if not exec_:
-                    # 回到主页
-                    self.ui.left_menu.select_only_one("btn_home")
-                    MainFunctions.set_page(self, self.ui.load_pages.page_1)
-                    return
+                return
         # 获取被点击的按钮
         btn = SetupMainWindow.setup_btns(self)
 

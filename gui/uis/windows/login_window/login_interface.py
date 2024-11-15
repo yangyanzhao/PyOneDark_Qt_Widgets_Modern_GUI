@@ -6,13 +6,15 @@ from PySide2.QtWidgets import QApplication, QDialog, QLabel, QFrame, QVBoxLayout
 from dayu_widgets import MTheme, MMessage, MFieldMixin, MLineEdit, MPushButton
 from qasync import QEventLoop, asyncSlot
 
-from api.auth import api_login
+from api.auth import api_login_user, api_token_check, api_logout_user
 from gui.core.json_settings import Settings
 from gui.core.json_themes import Themes
 from gui.uis.windows.login_window.Ui_LoginWindow import Ui_Form
 from gui.images import icons
+from gui.uis.windows.main_window.functions_main_window import MainFunctions
 from gui.utils.data_bind_util import widget_bind_value
 from gui.utils.frameless_window_wrapper import FramelessWindowWrapper
+from gui.utils.position_util import center_point_alignment
 from gui.utils.theme_util import setup_main_theme
 
 
@@ -73,7 +75,6 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
         self.line_edit_token.set_delay_duration(millisecond=2000)  # 延迟时间（毫秒
         widget_bind_value(parent=self, widget=self.line_edit_token, field_name="login_token",
                           widget_property="text", widget_signal="textChanged")
-        self.check_token()
 
     def set_wrapper(self, wrapper):
         self.wrapper = wrapper
@@ -84,20 +85,23 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
         port = self.lineEdit_2.text()
         username = self.lineEdit_3.text()
         password = self.lineEdit_4.text()
-        result = api_login(username, password)
-        if result['code'] == 200:
+        result = api_login_user(username, password, device='PC', satoken=self.line_edit_token.text())
+        if result['code'] == 0:
             self.logged_in = True
-            MMessage.success(result['msg'], parent=self.wrapper)
+            MMessage.success("登录成功", parent=self.wrapper)
+            notify = result['msg']
+            # 展示公告 TODO
             # 写入Token
-            self.line_edit_token.setText(result['token'])
-            # TODO 写入用户数据
+            self.line_edit_token.setText(result['data']['token'])
+            # TODO 写入用户数据,显示过期时间
             print(result)
             self.check_token()
         else:
-            MMessage.error("登录失败", parent=self.wrapper)
+            MMessage.error(result['msg'], parent=self.wrapper)
 
     @asyncSlot()
     async def on_logout(self, parent):
+        logout_result = api_logout_user(satoken=self.line_edit_token.text())
         # 清除Token
         self.line_edit_token.setText(None)
         self.check_token()
@@ -106,7 +110,8 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
     def check_token(self):
         # 检测Token有效性
         token = self.line_edit_token.text()
-        if token and True:  # 这里要进行API调用验证TODO
+        check_result = api_token_check(satoken=token)
+        if token and check_result['code'] == 0:  # 这里要进行API调用验证 TODO
             # 如果有效
             self.logged_in = True
             self.lineEdit.setVisible(False)
@@ -141,6 +146,14 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
             self.pushButton.setVisible(True)
             self.pushButton_2.setVisible(True)
             self.quit_button.setVisible(False)
+            if check_result['code'] == 100300006 or check_result['code'] == 1_003_000_01:
+                # 如果Token无效则弹出登录窗口
+                center_point_alignment(self.parent, self.parent.login_dialog_wrapper)
+                exec_ = self.parent.login_dialog_wrapper.exec_()
+                if not exec_:
+                    # 回到主页
+                    self.parent.ui.left_menu.select_only_one("btn_home")
+                    MainFunctions.set_page(self.parent, self.parent.ui.load_pages.page_1)
             return False
 
     def resizeEvent(self, e):

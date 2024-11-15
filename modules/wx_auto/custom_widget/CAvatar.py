@@ -260,7 +260,7 @@ class CAvatar(QWidget):
             self.loadingTimer.start(50)  # 显示进度动画
             try:
                 async with aiohttp.ClientSession() as session:
-                    async with session.get(url) as response:
+                    async with session.get(url, timeout=60) as response:
                         if response.status == 200:
                             data = await response.read()
                             self.onFinished(data)
