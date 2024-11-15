@@ -13,6 +13,7 @@ from gui.uis.windows.login_window.Ui_LoginWindow import Ui_Form
 from gui.images import icons
 from gui.utils.data_bind_util import widget_bind_value
 from gui.utils.frameless_window_wrapper import FramelessWindowWrapper
+from gui.utils.theme_util import setup_main_theme
 
 
 def isWin11():
@@ -25,24 +26,8 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
         super().__init__()
         self.parent = parent
         self.setupUi(self)
-        themes = Themes()
-        self.themes = themes.items
-        settings = Settings()
-        self.settings = settings.items
-        MTheme(theme="dark").apply(self)
-        m_theme = MTheme()
-        m_theme.set_theme(theme="light" if self.themes['theme_name'] == "bright" else "dark")
-        # 自定义主题
-        m_theme.title_color = self.themes["app_color"]["text_title"]
-        m_theme.primary_text_color = self.themes["app_color"]["text_foreground"]
-        m_theme.secondary_text_color = self.themes["app_color"]["text_description"]
 
-        m_theme.background_color = self.themes["app_color"]["bg_three"]
-        m_theme.background_selected_color = "#292929"
-        m_theme.background_in_color = self.themes["app_color"]["bg_two"]
-        m_theme.background_out_color = self.themes["app_color"]["bg_one"]
-        # 应用到当前组件
-        m_theme.apply(self)
+        setup_main_theme(self)
 
         self.label.setScaledContents(False)
         self.setWindowTitle('蜻蜓助手')

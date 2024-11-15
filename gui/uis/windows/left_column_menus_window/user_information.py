@@ -6,6 +6,7 @@ from PySide2.QtCore import Qt, QSize
 from PySide2.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout
 from dayu_widgets import MLabel
 
+from gui.utils.theme_util import setup_main_theme
 from modules.wx_auto.custom_widget.CAvatar import CAvatar
 from gui.utils.position_util import center_point_alignment
 
@@ -39,7 +40,7 @@ class UserInformationWidget(QWidget):
         super().__init__()
         self.parent = parent
         self.setWindowTitle("个人中心")
-        MTheme(theme="dark").apply(self)
+        setup_main_theme(self)
 
         # 主布局-垂直
         self.main_layout = QVBoxLayout(self)
