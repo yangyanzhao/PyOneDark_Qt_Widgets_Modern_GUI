@@ -20,6 +20,7 @@ def api_login_user(username, password, device, satoken=None):
                                 data=json.dumps(payload, ensure_ascii=False))
 
     res = response.content.decode(encoding='utf-8')
+    print(res)
     data = json.loads(res)
     demo = {
         "code": 0,
@@ -75,9 +76,9 @@ def api_token_check(satoken):
 
     response = requests.request("POST", url, headers=headers, params=payload)
     res = response.content.decode(encoding='utf-8')
-    data = json.loads(res)
     print(f"Token校验:{payload}")
-    print(data)
+    print(res)
+    data = json.loads(res)
     demo1 = {"code": 0, "data": 'true', "msg": "消息xxx"}
     demo2 = {"code": 1_003_000_01, "data": 'null', "msg": "已过期"}
     demo2 = {"code": 100300006, "data": 'null', "msg": "未登录"}
@@ -148,9 +149,9 @@ def api_login_list(satoken):
     response = requests.request("POST", url, headers=headers, params=payload)
 
     res = response.content.decode(encoding='utf-8')
+    print(res)
     data = json.loads(res)
     print(f"登录列表:{payload}")
-    print(data)
     if data['code'] == 0:
         return data['data']
 

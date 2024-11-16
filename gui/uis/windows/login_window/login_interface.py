@@ -93,9 +93,11 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
             # 展示公告 TODO
             # 写入Token
             self.line_edit_token.setText(result['data']['token'])
-            # TODO 写入用户数据,显示过期时间
+            # 写入用户数据
             self.table_local_storage.remove(cond=Query().key == "token")
             self.table_local_storage.insert(document={"key": "token", "value": result['data']['token']})
+            self.table_local_storage.remove(cond=Query().key == "user_info")
+            self.table_local_storage.insert(document={"key": "user_info", "value": result['data']})
             print(result)
             self.check_token()
         else:
@@ -113,7 +115,19 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
         # 检测Token有效性
         token = self.line_edit_token.text()
         check_result = api_token_check(satoken=token)
-        if token and check_result['code'] == 0:  # 这里要进行API调用验证 TODO
+        if token and check_result['code'] == 0:
+            self.table_local_storage.remove(cond=Query().key == "user_info")
+            self.table_local_storage.insert(document={"key": "user_info", "value": check_result['data']})
+            # 这里要更新用户信息 TODO
+            device_name = check_result['data']['token_info']['loginDevice']
+            username = check_result['data']['user']['username']
+            avatar = check_result['data']['user']['avatar']
+            nickname = check_result['data']['user']['nickname']
+            mobile = check_result['data']['user']['mobile']
+            allowTokenNumber = check_result['data']['user']['allowTokenNumber']
+            expirationDate = check_result['data']['user']['expirationDate']
+            msg = check_result['msg']
+
             # 如果有效
             self.logged_in = True
             self.lineEdit.setVisible(False)

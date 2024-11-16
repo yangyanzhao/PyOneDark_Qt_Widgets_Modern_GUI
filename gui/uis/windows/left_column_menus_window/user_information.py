@@ -1,5 +1,5 @@
 import qasync
-from dayu_widgets import MPushButton, MTheme
+from dayu_widgets import MPushButton, MTheme, MFieldMixin
 import asyncio
 
 from PySide2.QtCore import Qt, QSize
@@ -17,7 +17,10 @@ class InforWidget(QWidget):
         super(InforWidget, self).__init__()
         self.layout = QVBoxLayout(self)
         self.layout.setAlignment(Qt.AlignCenter)
-        i = 0
+        self.avatar = avatar
+        self.name = name
+        self.value = value
+
         if avatar:
             qh_box_layout = QHBoxLayout()
             qh_box_layout.addWidget(avatar)
@@ -25,18 +28,19 @@ class InforWidget(QWidget):
             self.layout.addLayout(qh_box_layout)
 
         if name:
-            q_label_name = MLabel(name)
-            q_label_name.setWordWrap(True)
-            q_label_name.setAlignment(Qt.AlignCenter)
-            self.layout.addWidget(q_label_name)
+            self.q_label_name = MLabel(name)
+            self.q_label_name.setWordWrap(True)
+            self.q_label_name.setAlignment(Qt.AlignCenter)
+            self.layout.addWidget(self.q_label_name)
+
         if value:
-            q_label_value = MLabel(value)
-            q_label_value.setWordWrap(True)
-            q_label_value.setAlignment(Qt.AlignCenter)
-            self.layout.addWidget(q_label_value)
+            self.q_label_value = MLabel(value)
+            self.q_label_value.setWordWrap(True)
+            self.q_label_value.setAlignment(Qt.AlignCenter)
+            self.layout.addWidget(self.q_label_value)
 
 
-class UserInformationWidget(QWidget):
+class UserInformationWidget(QWidget, MFieldMixin):
     def __init__(self, parent=None):
         super().__init__()
         self.parent = parent
@@ -51,17 +55,30 @@ class UserInformationWidget(QWidget):
                            url='https://pic.netbian.com/uploads/allimg/231016/223346-16974668265cf4.jpg', is_OD=True,
                            animation=False, parent=self)
         self.avatar_layout.addWidget(c_avatar)
-        # 部门 职务 年资
+
+        # 昵称 总数 在线
         self.post_layout = QHBoxLayout(self)
-        self.post_layout.addWidget(InforWidget(
+        infor_widget_0 = InforWidget(
             name=f"<span style='color: #7bb8d7;font-family: KaiTi;font-size: 14px; font-weight: bold;'>部门</span>",
-            value="HCP实施部"))
-        self.post_layout.addWidget(InforWidget(
-            name=f"<span style='color: #7bb8d7;font-family: KaiTi;font-size: 14px; font-weight: bold;'>职务</span>",
-            value="经理"))
-        self.post_layout.addWidget(InforWidget(
-            name=f"<span style='color: #7bb8d7;font-family: KaiTi;font-size: 14px; font-weight: bold;'>年资</span>",
-            value="2年"))
+            value="HCP实施部")
+        self.register_field(name='nickname')
+        self.bind(data_name="nickname", widget=infor_widget_0.q_label_value, qt_property="text")
+        self.post_layout.addWidget(infor_widget_0)
+
+        infor_widget_1 = InforWidget(
+            name=f"<span style='color: #7bb8d7;font-family: KaiTi;font-size: 14px; font-weight: bold;'>总数</span>",
+            value="10")
+        self.register_field(name='total_token')
+        self.bind(data_name="total_token", widget=infor_widget_1.q_label_value, qt_property="text")
+        self.post_layout.addWidget(infor_widget_1)
+
+        infor_widget_2 = InforWidget(
+            name=f"<span style='color: #7bb8d7;font-family: KaiTi;font-size: 14px; font-weight: bold;'>在线</span>",
+            value="1")
+        self.register_field(name='online_token')
+        self.bind(data_name="online_token", widget=infor_widget_1.q_label_value, qt_property="text")
+        self.post_layout.addWidget(infor_widget_2)
+
         self.post_layout.setStretch(0, 1)
         self.post_layout.setStretch(1, 1)
         self.post_layout.setStretch(2, 1)
@@ -73,7 +90,7 @@ class UserInformationWidget(QWidget):
                                                         name=f"<span style='color: #808080;font-family: KaiTi;font-size: 14px;'>手机</span>",
                                                         value="13888888888"))
         c_avatar_address = CAvatar(shape=CAvatar.Circle, size=CAvatar.SizeSmall,
-                                   url=icons['过期时间.svg'],animation=True)
+                                   url=icons['过期时间.svg'], animation=True)
         self.phone_address_layout.addWidget(
             InforWidget(avatar=c_avatar_address,
                         name=f"<span style='color: #808080;font-family: KaiTi;font-size: 14px;'>过期时间</span>",
@@ -99,13 +116,17 @@ class UserInformationWidget(QWidget):
         self.main_layout.addStretch()
         self.main_layout.addLayout(self.login_list_layout)
 
+    def load_data(self):
+        # 访问API获取最新用户信息
+
+        pass
+
     def logout(self):
         if self.parent:
             center_point_alignment(self.parent, self.parent.login_dialog_wrapper)
             check = self.parent.login_dialog_wrapper.target_widget.check_token()
             if check:
                 self.parent.login_dialog_wrapper.show()
-
 
 
 if __name__ == "__main__":
