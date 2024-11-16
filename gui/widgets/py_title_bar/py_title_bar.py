@@ -143,6 +143,7 @@ class PyTitleBar(QWidget):
             self.top_logo.mouseMoveEvent = moveWindow
             self.div_1.mouseMoveEvent = moveWindow
             self.title_label.mouseMoveEvent = moveWindow
+            self.time_label.mouseMoveEvent = moveWindow
             self.div_2.mouseMoveEvent = moveWindow
             self.div_3.mouseMoveEvent = moveWindow
 
@@ -151,6 +152,7 @@ class PyTitleBar(QWidget):
             self.top_logo.mouseDoubleClickEvent = self.maximize_restore
             self.div_1.mouseDoubleClickEvent = self.maximize_restore
             self.title_label.mouseDoubleClickEvent = self.maximize_restore
+            self.time_label.mouseDoubleClickEvent = self.maximize_restore
             self.div_2.mouseDoubleClickEvent = self.maximize_restore
 
         # ADD WIDGETS TO TITLE BAR
@@ -158,6 +160,7 @@ class PyTitleBar(QWidget):
         self.bg_layout.addWidget(self.top_logo)
         self.bg_layout.addWidget(self.div_1)
         self.bg_layout.addWidget(self.title_label)
+        self.bg_layout.addWidget(self.time_label)
         self.bg_layout.addWidget(self.div_2)
 
         # ADD BUTTONS BUTTONS
@@ -263,6 +266,12 @@ class PyTitleBar(QWidget):
             self._parent.showMaximized()
             change_ui()
 
+    def update_time(self):
+        # 获取当前时间
+        current_time = QDateTime.currentDateTime().toString("yyyy-MM-dd HH:mm:ss")
+        # 更新 QLabel 的文本
+        self.time_label.setText(current_time)
+
     # SETUP APP
     # ///////////////////////////////////////////////////////////////
     def setup_ui(self):
@@ -295,6 +304,15 @@ class PyTitleBar(QWidget):
         self.title_label = QLabel()
         self.title_label.setAlignment(Qt.AlignVCenter)
         self.title_label.setStyleSheet(f'font: {self._title_size}pt "{self._font_family}"')
+
+        # TIME LABEL
+        self.time_label = QLabel()
+        self.time_label.setAlignment(Qt.AlignVCenter)
+        self.time_label.setStyleSheet(f'font: {self._title_size}pt "{self._font_family}"')
+        # 创建一个 QTimer 用于定期更新时间
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.update_time)
+        self.timer.start(1000)  # 每秒更新一次
 
         # CUSTOM BUTTONS LAYOUT
         self.custom_buttons_layout = QHBoxLayout()

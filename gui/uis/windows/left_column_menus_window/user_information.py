@@ -6,6 +6,7 @@ from PySide2.QtCore import Qt, QSize
 from PySide2.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout
 from dayu_widgets import MLabel
 
+from gui.images import icons
 from gui.utils.theme_util import setup_main_theme
 from modules.wx_auto.custom_widget.CAvatar import CAvatar
 from gui.utils.position_util import center_point_alignment
@@ -67,18 +68,18 @@ class UserInformationWidget(QWidget):
         # 手机 地址
         self.phone_address_layout = QHBoxLayout(self)
         c_avatar_phone = CAvatar(shape=CAvatar.Circle, size=CAvatar.SizeSmall,
-                                 url='https://www.thiswaifudoesnotexist.net/example-1000.jpg')
+                                 url=icons['手机.svg'])
         self.phone_address_layout.addWidget(InforWidget(avatar=c_avatar_phone,
                                                         name=f"<span style='color: #808080;font-family: KaiTi;font-size: 14px;'>手机</span>",
                                                         value="13888888888"))
         c_avatar_address = CAvatar(shape=CAvatar.Circle, size=CAvatar.SizeSmall,
-                                   url='https://www.thiswaifudoesnotexist.net/example-1000.jpg')
+                                   url=icons['过期时间.svg'],animation=True)
         self.phone_address_layout.addWidget(
             InforWidget(avatar=c_avatar_address,
-                        name=f"<span style='color: #808080;font-family: KaiTi;font-size: 14px;'>住址</span>",
-                        value="江苏省苏州市国际科技园B402"))
-        self.phone_address_layout.setStretch(0, 1)
-        self.phone_address_layout.setStretch(1, 1)
+                        name=f"<span style='color: #808080;font-family: KaiTi;font-size: 14px;'>过期时间</span>",
+                        value="2024:11:16 21:12:00"))
+        self.phone_address_layout.setStretch(0, 2)
+        self.phone_address_layout.setStretch(1, 3)
 
         self.rout_layout = QVBoxLayout(self)
         self.button_logout = MPushButton(text="登录")
