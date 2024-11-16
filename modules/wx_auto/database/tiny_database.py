@@ -16,6 +16,7 @@ table_prompts = tiny_db.table('Prompts')
 table_settings = tiny_db.table('Settings')
 # 控件记忆表
 table_memory = tiny_db.table('Memory')
-
+# LocalStorage本地存储
+table_local_storage = tiny_db.table("LocalStorage")
 # 数据表
 table_demo = tiny_db.table('Demo')

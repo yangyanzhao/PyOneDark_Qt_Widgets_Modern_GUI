@@ -4,6 +4,7 @@
 import asyncio
 
 import qasync
+from dayu_widgets import MTheme
 
 from gui.uis.windows.login_window.login_interface import LoginWindow
 from gui.uis.windows.main_window.functions_main_window import *
@@ -14,6 +15,7 @@ from gui.utils.frameless_dialog_wrapper import FramelessDialogWrapper
 from gui.utils.frameless_window_wrapper import FramelessWindowWrapper
 from gui.utils.position_util import center_point_alignment
 from gui.utils.system_tray import SystemTrayTool
+from gui.utils.theme_util import setup_main_theme
 from qt_core import *
 from gui.core.json_settings import Settings
 from gui.uis.windows.main_window import *
@@ -52,10 +54,11 @@ class MainWindow(QMainWindow):
         SetupMainWindow.setup_gui(self)
 
         # 初始化登录窗口，但是不显示，处于隐藏状态。
-        login_window = LoginWindow(self)
-        self.login_dialog_wrapper = FramelessDialogWrapper(login_window)
-        login_window.set_wrapper(self.login_dialog_wrapper)
-        login_window.check_token()
+        self.login_window = LoginWindow(self)
+        setup_main_theme(self.login_window)
+        self.login_dialog_wrapper = FramelessDialogWrapper(target_widget=self.login_window,has_title_bar=True,attach_title_bar_layout=self.login_window.verticalLayout_1)
+        self.login_window.set_wrapper(self.login_dialog_wrapper)
+        self.login_window.check_token()
         # 显示 窗口
         # ///////////////////////////////////////////////////////////////
         self.show()
@@ -209,5 +212,6 @@ if __name__ == "__main__":
     asyncio.set_event_loop(loop)
     # 创建窗口
     main_window = MainWindow()
+    setup_main_theme(main_window)
     with loop:
         loop.run_forever()

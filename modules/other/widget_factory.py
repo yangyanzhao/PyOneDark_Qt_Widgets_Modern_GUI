@@ -14,7 +14,6 @@ class WidgetFactory(QWidget):
         self.label = QLabel(
             f"<center><span style='font-size: 80px; color: #4F9FEE;'>{self.widget_name}</span></center>")
         self.button = MPushButton(text="Click Me")
-        MTheme(theme="dark").apply(self.button)
         self.button.setMaximumHeight(40)
         self.layout.addWidget(self.label)
         self.layout.addWidget(self.button)

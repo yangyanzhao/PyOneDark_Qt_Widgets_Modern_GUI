@@ -8,6 +8,8 @@ from dayu_widgets.qt import MIcon
 from qasync import QEventLoop, asyncSlot
 from dayu_widgets import MTheme, MListView, MPushButtonGroup, MPushButton, MLineEdit, \
     MFieldMixin, MLoadingWrapper, dayu_theme, MToolButton, MMenu, MComboBox, MTextEdit
+
+from gui.utils.theme_util import setup_main_theme
 from modules.wx_auto.database.tiny_database import table_wx_chat_group_list, table_settings, table_prompts
 from modules.wx_auto.database.settings_widget import MSettingsWidget
 from modules.wx_auto.icons import icons
@@ -774,7 +776,7 @@ if __name__ == '__main__':
     asyncio.set_event_loop(loop)
     # 创建窗口
     demo_widget = HomeInterface()
-    MTheme(theme='dark').apply(demo_widget)
+    setup_main_theme(demo_widget)
     # 显示窗口
     demo_widget.show()
     with loop:

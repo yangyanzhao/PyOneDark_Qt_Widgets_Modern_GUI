@@ -5,6 +5,7 @@ from PySide2.QtGui import QIcon, QPixmap, QColor, Qt, QCloseEvent, QPalette
 from PySide2.QtWidgets import QApplication, QDialog, QLabel, QFrame, QVBoxLayout, QWidget
 from dayu_widgets import MTheme, MMessage, MFieldMixin, MLineEdit, MPushButton
 from qasync import QEventLoop, asyncSlot
+from tinydb import Query
 
 from api.auth import api_login_user, api_token_check, api_logout_user
 from gui.core.json_settings import Settings
@@ -16,6 +17,7 @@ from gui.utils.data_bind_util import widget_bind_value
 from gui.utils.frameless_window_wrapper import FramelessWindowWrapper
 from gui.utils.position_util import center_point_alignment
 from gui.utils.theme_util import setup_main_theme
+from modules.wx_auto.database.tiny_database import table_local_storage
 
 
 def isWin11():
@@ -26,11 +28,9 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
 
     def __init__(self, parent=None):
         super().__init__()
+        self.table_local_storage = table_local_storage
         self.parent = parent
         self.setupUi(self)
-
-        setup_main_theme(self)
-
         self.label.setScaledContents(False)
         self.setWindowTitle('蜻蜓助手')
         self.setWindowIcon(QIcon(icons['logo.svg']))
@@ -85,15 +85,17 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
         port = self.lineEdit_2.text()
         username = self.lineEdit_3.text()
         password = self.lineEdit_4.text()
-        result = api_login_user(username, password, device='PC', satoken=self.line_edit_token.text())
+        result = api_login_user(username, password, device='电脑一', satoken=self.line_edit_token.text())
         if result['code'] == 0:
             self.logged_in = True
-            MMessage.success("登录成功", parent=self.wrapper)
+            MMessage.success("登录成功", parent=self.wrapper if hasattr(self, "wrapper") else self)
             notify = result['msg']
             # 展示公告 TODO
             # 写入Token
             self.line_edit_token.setText(result['data']['token'])
             # TODO 写入用户数据,显示过期时间
+            self.table_local_storage.remove(cond=Query().key == "token")
+            self.table_local_storage.insert(document={"key": "token", "value": result['data']['token']})
             print(result)
             self.check_token()
         else:
@@ -197,6 +199,7 @@ if __name__ == '__main__':
     asyncio.set_event_loop(loop)
     # 创建窗口
     login_window = LoginWindow()
+    setup_main_theme(login_window)
     login_window_wrapper = FramelessWindowWrapper(target_widget=login_window, has_title_bar=True,
                                                   attach_title_bar_layout=login_window.verticalLayout_1)
     login_window_wrapper.show()

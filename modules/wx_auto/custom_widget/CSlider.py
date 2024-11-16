@@ -4,6 +4,8 @@ from PySide2.QtWidgets import QSlider, QStyleOptionSlider, QStyle, QWidget, QVBo
 from dayu_widgets import MTheme
 from qasync import QEventLoop
 
+from gui.utils.theme_util import setup_main_theme
+
 # 普通样式
 Style = """
 /*横向*/
@@ -112,7 +114,7 @@ if __name__ == '__main__':
     loop = QEventLoop(app)
     asyncio.set_event_loop(loop)
     widget = DemoWindow()
-    MTheme(theme='dark').apply(widget)
+    setup_main_theme(widget)
     # 显示窗口
     widget.show()
     # 显示窗口

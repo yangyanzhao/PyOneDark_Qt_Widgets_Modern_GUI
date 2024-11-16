@@ -101,7 +101,10 @@ class UserInformationWidget(QWidget):
     def logout(self):
         if self.parent:
             center_point_alignment(self.parent, self.parent.login_dialog_wrapper)
-            self.parent.login_dialog_wrapper.exec_()
+            check = self.parent.login_dialog_wrapper.target_widget.check_token()
+            if check:
+                self.parent.login_dialog_wrapper.show()
+
 
 
 if __name__ == "__main__":

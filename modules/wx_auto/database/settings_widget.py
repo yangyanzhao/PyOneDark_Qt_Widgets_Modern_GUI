@@ -6,6 +6,7 @@ from dayu_widgets.qt import MPixmap
 from qasync import QEventLoop
 from tinydb import TinyDB, Query
 
+from gui.utils.theme_util import setup_main_theme
 from modules.wx_auto.database.tiny_database import table_settings, table_memory
 
 
@@ -131,7 +132,7 @@ if __name__ == '__main__':
     demo_widget.add_setting(widget=MSwitch(), field_name=f"is_auto_run3", widget_property="checked",
                             widget_signal="toggled",
                             title="自动添加", avatar=MPixmap("icons/自动运行.svg", color="#FFFF00"))
-    MTheme(theme='dark').apply(demo_widget)
+    setup_main_theme(demo_widget)
     # 显示窗口
     demo_widget.show()
     loop.run_forever()

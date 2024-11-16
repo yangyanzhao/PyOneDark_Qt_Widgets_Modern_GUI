@@ -37,6 +37,7 @@ from .ui_main import *
 from .functions_main_window import *
 from ..left_column_menus_window.settings_base import SettingBaseInterface
 from ..left_column_menus_window.user_information import UserInformationWidget
+from ..left_column_menus_window.user_information_token_list import UserInformationTokenListWidget
 
 
 # PY WINDOW
@@ -242,26 +243,31 @@ class SetupMainWindow:
         # ///////////////////////////////////////////////////////////////
         user_information_widget = UserInformationWidget(self)
         self.ui.left_column_info.menus.menus.addWidget(user_information_widget)
-        widget_xin = WidgetFactory(widget_name="2信")
-        self.ui.left_column_info.menus.menus.addWidget(widget_xin)
+        self.ui.left_column_info.menus.menus.setCurrentWidget(user_information_widget)
+        user_information_token_list_widget = UserInformationTokenListWidget(self)
+        self.ui.left_column_info.menus.menus.addWidget(user_information_token_list_widget)
         widget_ren = WidgetFactory(widget_name="3仁")
         self.ui.left_column_info.menus.menus.addWidget(widget_ren)
         widget_yong = WidgetFactory(widget_name="4勇")
         self.ui.left_column_info.menus.menus.addWidget(widget_yong)
         widget_yan = WidgetFactory(widget_name="5严")
         self.ui.left_column_info.menus.menus.addWidget(widget_yan)
-
-        widget_xin.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(widget_ren))
+        user_information_widget.button_login_list.clicked.connect(lambda: (
+            self.ui.left_column_info.menus.menus.setCurrentWidget(user_information_token_list_widget),
+            user_information_token_list_widget.load_token_list(),
+            user_information_widget.parent.login_window.check_token()))
+        user_information_token_list_widget.personal_button.clicked.connect(
+            lambda: (self.ui.left_column_info.menus.menus.setCurrentWidget(user_information_widget),user_information_widget.parent.login_window.check_token()))
         widget_ren.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(widget_yong))
         widget_yong.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(widget_yan))
-        widget_yan.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(user_information_widget))
+        widget_yan.button.clicked.connect(
+            lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(user_information_widget))
 
         # 自定义 左列 设置菜单 TODO
         # ///////////////////////////////////////////////////////////////
         setting_base_interface = SettingBaseInterface()
         self.ui.left_column.menus.menus.addWidget(setting_base_interface)
         self.ui.left_column.menus.menus.setCurrentWidget(setting_base_interface)
-
 
         # 页面补全，对已有页面进行填充
         # ///////////////////////////////////////////////////////////////
