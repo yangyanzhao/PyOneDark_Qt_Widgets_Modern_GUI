@@ -9,6 +9,7 @@ from qasync import QEventLoop, asyncSlot
 from dayu_widgets import MTheme, MListView, MPushButtonGroup, MPushButton, MLineEdit, \
     MFieldMixin, MLoadingWrapper, dayu_theme, MToolButton, MMenu, MComboBox, MTextEdit
 
+from gui.core.data_class import data_local_storage
 from gui.utils.theme_util import setup_main_theme
 from modules.wx_auto.database.tiny_database import table_wx_chat_group_list, table_settings, table_prompts
 from modules.wx_auto.database.settings_widget import MSettingsWidget
@@ -735,8 +736,8 @@ These examples showcase Synthia's human-like ability to engage in casual, relata
         combo_box.set_formatter(formatter_show)  # 设置级联显示格式
         combo_box.set_menu(menu)
         # 双向绑定
-        MSettingsWidget.widget_bind_value(parent=self, widget=combo_box, field_name="prompt_menu_select",
-                                          widget_property="value", widget_signal="sig_value_changed")
+        data_local_storage.widget_bind_value(widget=combo_box, field_name="prompt_menu_select",
+                                             widget_property="value", widget_signal="sig_value_changed")
         v_layout.addWidget(combo_box)
         v_layout.addWidget(text_edit)
         fh_layout = QHBoxLayout()
@@ -745,11 +746,10 @@ These examples showcase Synthia's human-like ability to engage in casual, relata
         friend_edit.setPlaceholderText("请输入名称")
         friend_edit.set_prefix_widget(MToolButton().svg(path=icons['微信好友.svg']).icon_only())
         friend_edit.set_delay_duration(millisecond=2000)  # 延迟时间（毫秒）
-        MSettingsWidget.widget_bind_value(parent=self,
-                                          widget=friend_edit,
-                                          field_name="wx_friend_chat_assistant",
-                                          widget_property="text",
-                                          widget_signal="textChanged")
+        data_local_storage.widget_bind_value(widget=friend_edit,
+                                             field_name="wx_friend_chat_assistant",
+                                             widget_property="text",
+                                             widget_signal="textChanged")
 
         # 提交按钮
         button_submit = MPushButton("执行", icon=MIcon(path=icons['执行.svg']))

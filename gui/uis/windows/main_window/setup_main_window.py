@@ -241,9 +241,9 @@ class SetupMainWindow:
 
         # 自定义 左列 信息菜单 TODO
         # ///////////////////////////////////////////////////////////////
-        user_information_widget = UserInformationWidget(self)
-        self.ui.left_column_info.menus.menus.addWidget(user_information_widget)
-        self.ui.left_column_info.menus.menus.setCurrentWidget(user_information_widget)
+        self.user_information_widget = UserInformationWidget(self)
+        self.ui.left_column_info.menus.menus.addWidget(self.user_information_widget)
+        self.ui.left_column_info.menus.menus.setCurrentWidget(self.user_information_widget)
         user_information_token_list_widget = UserInformationTokenListWidget(self)
         self.ui.left_column_info.menus.menus.addWidget(user_information_token_list_widget)
         widget_ren = WidgetFactory(widget_name="3仁")
@@ -252,16 +252,16 @@ class SetupMainWindow:
         self.ui.left_column_info.menus.menus.addWidget(widget_yong)
         widget_yan = WidgetFactory(widget_name="5严")
         self.ui.left_column_info.menus.menus.addWidget(widget_yan)
-        user_information_widget.button_login_list.clicked.connect(lambda: (
+        self.user_information_widget.button_login_list.clicked.connect(lambda: (
             self.ui.left_column_info.menus.menus.setCurrentWidget(user_information_token_list_widget),
             user_information_token_list_widget.load_token_list(),
-            user_information_widget.parent.login_window.check_token()))
+            self.user_information_widget.parent.login_window.check_token()))
         user_information_token_list_widget.personal_button.clicked.connect(
-            lambda: (self.ui.left_column_info.menus.menus.setCurrentWidget(user_information_widget),user_information_widget.parent.login_window.check_token()))
+            lambda: (self.ui.left_column_info.menus.menus.setCurrentWidget(self.user_information_widget),self.user_information_widget.parent.login_window.check_token()))
         widget_ren.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(widget_yong))
         widget_yong.button.clicked.connect(lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(widget_yan))
         widget_yan.button.clicked.connect(
-            lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(user_information_widget))
+            lambda: self.ui.left_column_info.menus.menus.setCurrentWidget(self.user_information_widget))
 
         # 自定义 左列 设置菜单 TODO
         # ///////////////////////////////////////////////////////////////

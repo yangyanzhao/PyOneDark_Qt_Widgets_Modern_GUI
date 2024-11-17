@@ -6,6 +6,7 @@ from PySide2.QtCore import Qt, QSize
 from PySide2.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout
 from dayu_widgets import MLabel
 
+from gui.core.data_class import data_session_storage
 from gui.images import icons
 from gui.utils.theme_util import setup_main_theme
 from modules.wx_auto.custom_widget.CAvatar import CAvatar
@@ -61,22 +62,22 @@ class UserInformationWidget(QWidget, MFieldMixin):
         infor_widget_0 = InforWidget(
             name=f"<span style='color: #7bb8d7;font-family: KaiTi;font-size: 14px; font-weight: bold;'>部门</span>",
             value="HCP实施部")
-        self.register_field(name='nickname')
-        self.bind(data_name="nickname", widget=infor_widget_0.q_label_value, qt_property="text")
+        data_session_storage.register_field(name='nickname')
+        data_session_storage.bind(data_name="nickname", widget=infor_widget_0.q_label_value, qt_property="text")
         self.post_layout.addWidget(infor_widget_0)
 
         infor_widget_1 = InforWidget(
             name=f"<span style='color: #7bb8d7;font-family: KaiTi;font-size: 14px; font-weight: bold;'>总数</span>",
             value="10")
-        self.register_field(name='total_token')
-        self.bind(data_name="total_token", widget=infor_widget_1.q_label_value, qt_property="text")
+        data_session_storage.register_field(name='total_token')
+        data_session_storage.bind(data_name="total_token", widget=infor_widget_1.q_label_value, qt_property="text")
         self.post_layout.addWidget(infor_widget_1)
 
         infor_widget_2 = InforWidget(
             name=f"<span style='color: #7bb8d7;font-family: KaiTi;font-size: 14px; font-weight: bold;'>在线</span>",
             value="1")
-        self.register_field(name='online_token')
-        self.bind(data_name="online_token", widget=infor_widget_1.q_label_value, qt_property="text")
+        data_session_storage.register_field(name='online_token')
+        data_session_storage.bind(data_name="online_token", widget=infor_widget_2.q_label_value, qt_property="text")
         self.post_layout.addWidget(infor_widget_2)
 
         self.post_layout.setStretch(0, 1)

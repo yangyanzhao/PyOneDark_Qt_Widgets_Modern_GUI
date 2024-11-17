@@ -8,12 +8,12 @@ from qasync import QEventLoop, asyncSlot
 from tinydb import Query
 
 from api.auth import api_login_user, api_token_check, api_logout_user
+from gui.core.data_class import data_session_storage, data_local_storage
 from gui.core.json_settings import Settings
 from gui.core.json_themes import Themes
 from gui.uis.windows.login_window.Ui_LoginWindow import Ui_Form
 from gui.images import icons
 from gui.uis.windows.main_window.functions_main_window import MainFunctions
-from gui.utils.data_bind_util import widget_bind_value
 from gui.utils.frameless_window_wrapper import FramelessWindowWrapper
 from gui.utils.position_util import center_point_alignment
 from gui.utils.theme_util import setup_main_theme
@@ -52,11 +52,11 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
 
         # 数据绑定(账号)
         self.lineEdit_3.set_delay_duration(millisecond=2000)  # 延迟时间（毫秒
-        widget_bind_value(parent=self, widget=self.lineEdit_3, field_name="login_username", widget_property="text",
-                          widget_signal="textChanged")
+        data_local_storage.widget_bind_value(widget=self.lineEdit_3, field_name="login_username", widget_property="text",
+                           widget_signal="textChanged")
         # 数据绑定(记住密码)
-        widget_bind_value(parent=self, widget=self.checkBox, field_name="login_remember_me", widget_property="checked",
-                          widget_signal="toggled")
+        data_local_storage.widget_bind_value(widget=self.checkBox, field_name="login_remember_me", widget_property="checked",
+                           widget_signal="toggled")
         # 退出登录按钮
         self.quit_button = MPushButton(text='退出登录')
         self.quit_button.clicked.connect(lambda: self.on_logout(self.wrapper))
@@ -65,16 +65,16 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
         if self.checkBox.isChecked():
             # 数据绑定(密码)
             self.lineEdit_4.set_delay_duration(millisecond=2000)  # 延迟时间（毫秒
-            widget_bind_value(parent=self, widget=self.lineEdit_4, field_name="login_password",
-                              widget_property="text", widget_signal="textChanged")
+            data_local_storage.widget_bind_value(widget=self.lineEdit_4, field_name="login_password",
+                               widget_property="text", widget_signal="textChanged")
         # 构建一个隐藏的LineEdit来放置Token，以后调试直接显示出来很方便。
         self.line_edit_token = MLineEdit()
         self.line_edit_token.setVisible(False)
         self.verticalLayout_2.addWidget(self.line_edit_token)
         # 数据绑定(Token)
         self.line_edit_token.set_delay_duration(millisecond=2000)  # 延迟时间（毫秒
-        widget_bind_value(parent=self, widget=self.line_edit_token, field_name="login_token",
-                          widget_property="text", widget_signal="textChanged")
+        data_local_storage.widget_bind_value(widget=self.line_edit_token, field_name="login_token",
+                           widget_property="text", widget_signal="textChanged")
 
     def set_wrapper(self, wrapper):
         self.wrapper = wrapper
@@ -126,8 +126,11 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
             mobile = check_result['data']['user']['mobile']
             allowTokenNumber = check_result['data']['user']['allowTokenNumber']
             expirationDate = check_result['data']['user']['expirationDate']
+            online_number = check_result['data']['online_number']
             msg = check_result['msg']
-
+            data_session_storage.set_field("nickname", nickname)
+            data_session_storage.set_field("total_token", allowTokenNumber)
+            data_session_storage.set_field("online_token", online_number)
             # 如果有效
             self.logged_in = True
             self.lineEdit.setVisible(False)

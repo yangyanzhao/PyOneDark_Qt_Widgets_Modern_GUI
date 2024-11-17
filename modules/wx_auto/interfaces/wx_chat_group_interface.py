@@ -12,6 +12,7 @@ from dayu_widgets import MTheme, MFieldMixin, dayu_theme, MTableModel, MSortFilt
     MTableView, MPushButtonGroup, MPushButton, MMessage, MLoadingWrapper, MSpinBox
 from tinydb.table import Document
 
+from gui.core.data_class import data_local_storage
 from modules.wx_auto.custom_widget.CPaginationBar import CPaginationBar, FlatStyle
 from modules.wx_auto.database.settings_widget import MSettingsWidget
 from modules.wx_auto.database.tiny_database import table_wx_chat_group_list
@@ -249,9 +250,9 @@ class WxChatGroupInterface(QWidget, MFieldMixin):
         m_spin_box_thumbs_up_number = MSpinBox()
         m_spin_box_thumbs_up_number.setRange(1, 100)
         m_spin_box_thumbs_up_number.setValue(20)
-        MSettingsWidget.widget_bind_value(parent=self, widget=m_spin_box_thumbs_up_number,
-                                          field_name="thumbs_up_number",
-                                          widget_property="value", widget_signal="valueChanged")
+        data_local_storage.widget_bind_value(widget=m_spin_box_thumbs_up_number,
+                                             field_name="thumbs_up_number",
+                                             widget_property="value", widget_signal="valueChanged")
         layout.addWidget(m_spin_box_thumbs_up_number)
         self.drawer.set_widget(widget)
         self.button_cancel = MPushButton("取消")

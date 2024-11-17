@@ -6,6 +6,7 @@ from dayu_widgets.qt import MPixmap
 from qasync import QEventLoop
 from tinydb import TinyDB, Query
 
+from gui.core.data_class import data_local_storage
 from gui.utils.theme_util import setup_main_theme
 from modules.wx_auto.database.tiny_database import table_settings, table_memory
 
@@ -48,15 +49,11 @@ class MSettingsWidget(QtWidgets.QWidget, MFieldMixin):
 
     def add_setting(self, widget: QWidget, field_name: str, widget_property: str, widget_signal: str,
                     cover=None, avatar=None, title=None, description=None, extra=False, parent=None):
-        # 注册属性
-        self.register_field(name=field_name)
-        # 尝试获取配置
-        field_data = table_settings.get(cond=Query()[field_name].exists())
-        # 设置读取值
-        if field_data and field_data[field_name]:
-            self.set_field(name=field_name, value=field_data[field_name])
-        else:
-            self.set_field(name=field_name, value=widget.property(widget_property))
+        # 数据双向绑定
+        data_local_storage.widget_bind_value(widget=widget,
+                                             field_name=field_name,
+                                             widget_property=widget_property,
+                                             widget_signal=widget_signal)
         meta = MSettingMeta()
         meta.setup_data({
             'cover': cover,  # 封面图片路径 例:MPixmap("app-houdini.png")
@@ -69,37 +66,6 @@ class MSettingsWidget(QtWidgets.QWidget, MFieldMixin):
         if widget and isinstance(widget, QWidget):
             meta.add_widget(widget)
         self.task_card_lay.addWidget(meta)
-        # 双向绑定
-        self.bind(data_name=field_name, widget=widget, qt_property=widget_property, signal=widget_signal,
-                  callback=lambda: table_settings.upsert(document={field_name: self.field(field_name)},
-                                                         cond=Query()[field_name].exists()))
-
-    @staticmethod
-    def widget_bind_value(parent: MFieldMixin, widget: QWidget, field_name: str, widget_property: str,
-                          widget_signal: str):
-        """
-        控件数据绑定数据，用来记住数据回显，使控件有记忆力。
-        :param parent: 父级控件
-        :param widget: 绑定控件
-        :param field_name: 字段名称
-        :param widget_property: 控件属性名称
-        :param widget_signal: 控件的数据改变信号
-        :return:
-        """
-        # 注册属性
-        parent.register_field(name=field_name)
-        # 尝试获取配置
-        field_data = table_memory.get(cond=Query()[field_name].exists())
-        # 设置读取值
-        if field_data and field_data[field_name]:
-            parent.set_field(name=field_name, value=field_data[field_name])
-        else:
-            parent.set_field(name=field_name, value=widget.property(widget_property))
-
-        # 双向绑定
-        parent.bind(data_name=field_name, widget=widget, qt_property=widget_property, signal=widget_signal,
-                    callback=lambda: table_memory.upsert(document={field_name: parent.field(field_name)},
-                                                         cond=Query()[field_name].exists()))
 
     @staticmethod
     def get_setting(field_name):
