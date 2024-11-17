@@ -8,6 +8,7 @@ from dayu_widgets import MLabel
 from tinydb import Query
 
 from api.auth import api_login_list, api_logout_user_by_satoken
+from gui.core.data_class import data_session_storage
 from gui.images import icons
 from gui.utils.theme_util import setup_main_theme
 from modules.wx_auto.database.card_list_widget import MCardListWidget
@@ -51,6 +52,13 @@ class TokenWidget(QWidget):
         token_info = self.table_local_storage.get(Query().key == "token")
         api_logout_user_by_satoken(satoken=token_info['value'], logout_token=self.token)
         self.parent.load_token_list()
+        if token_info['value'] == self.token:
+            # 清除用户数据
+            data_session_storage.set_field("nickname", None)
+            data_session_storage.set_field("total_token", None)
+            data_session_storage.set_field("online_token", None)
+            data_session_storage.set_field("mobile", None)
+            data_session_storage.set_field("expirationDate", None)
 
 
 class UserInformationTokenListWidget(QWidget):
