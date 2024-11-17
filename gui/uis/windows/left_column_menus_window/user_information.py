@@ -53,7 +53,7 @@ class UserInformationWidget(QWidget, MFieldMixin):
         # 头像
         self.avatar_layout = QHBoxLayout(self)
         c_avatar = CAvatar(shape=CAvatar.Rectangle, size=QSize(200, 150),
-                           url='https://pic.netbian.com/uploads/allimg/231016/223346-16974668265cf4.jpg', is_OD=True,
+                           url=icons['avatar.jpg'], is_OD=True,
                            animation=False, parent=self)
         self.avatar_layout.addWidget(c_avatar)
 
@@ -62,22 +62,22 @@ class UserInformationWidget(QWidget, MFieldMixin):
         infor_widget_0 = InforWidget(
             name=f"<span style='color: #7bb8d7;font-family: KaiTi;font-size: 14px; font-weight: bold;'>部门</span>",
             value="HCP实施部")
-        data_session_storage.register_field(name='nickname')
-        data_session_storage.bind(data_name="nickname", widget=infor_widget_0.q_label_value, qt_property="text")
+        data_session_storage.widget_bind_value(field_name="nickname", widget=infor_widget_0.q_label_value,
+                                               widget_property="text")
         self.post_layout.addWidget(infor_widget_0)
 
         infor_widget_1 = InforWidget(
             name=f"<span style='color: #7bb8d7;font-family: KaiTi;font-size: 14px; font-weight: bold;'>总数</span>",
             value="10")
-        data_session_storage.register_field(name='total_token')
-        data_session_storage.bind(data_name="total_token", widget=infor_widget_1.q_label_value, qt_property="text")
+        data_session_storage.widget_bind_value(field_name="total_token", widget=infor_widget_1.q_label_value,
+                                               widget_property="text")
         self.post_layout.addWidget(infor_widget_1)
 
         infor_widget_2 = InforWidget(
             name=f"<span style='color: #7bb8d7;font-family: KaiTi;font-size: 14px; font-weight: bold;'>在线</span>",
             value="1")
-        data_session_storage.register_field(name='online_token')
-        data_session_storage.bind(data_name="online_token", widget=infor_widget_2.q_label_value, qt_property="text")
+        data_session_storage.widget_bind_value(field_name="online_token", widget=infor_widget_2.q_label_value,
+                                               widget_property="text")
         self.post_layout.addWidget(infor_widget_2)
 
         self.post_layout.setStretch(0, 1)
@@ -87,15 +87,21 @@ class UserInformationWidget(QWidget, MFieldMixin):
         self.phone_address_layout = QHBoxLayout(self)
         c_avatar_phone = CAvatar(shape=CAvatar.Circle, size=CAvatar.SizeSmall,
                                  url=icons['手机.svg'])
-        self.phone_address_layout.addWidget(InforWidget(avatar=c_avatar_phone,
-                                                        name=f"<span style='color: #808080;font-family: KaiTi;font-size: 14px;'>手机</span>",
-                                                        value="13888888888"))
+        infor_widget_3 = InforWidget(avatar=c_avatar_phone,
+                                     name=f"<span style='color: #808080;font-family: KaiTi;font-size: 14px;'>手机</span>",
+                                     value="13888888888")
+        data_session_storage.widget_bind_value(field_name="mobile", widget=infor_widget_3.q_label_value,
+                                               widget_property="text")
+        self.phone_address_layout.addWidget(infor_widget_3)
+
         c_avatar_address = CAvatar(shape=CAvatar.Circle, size=CAvatar.SizeSmall,
                                    url=icons['过期时间.svg'], animation=True)
-        self.phone_address_layout.addWidget(
-            InforWidget(avatar=c_avatar_address,
-                        name=f"<span style='color: #808080;font-family: KaiTi;font-size: 14px;'>过期时间</span>",
-                        value="2024:11:16 21:12:00"))
+        infor_widget_4 = InforWidget(avatar=c_avatar_address,
+                                     name=f"<span style='color: #808080;font-family: KaiTi;font-size: 14px;'>过期时间</span>",
+                                     value="2024:11:16 21:12:00")
+        data_session_storage.widget_bind_value(field_name="expirationDate", widget=infor_widget_4.q_label_value,
+                                               widget_property="text")
+        self.phone_address_layout.addWidget(infor_widget_4)
         self.phone_address_layout.setStretch(0, 2)
         self.phone_address_layout.setStretch(1, 3)
 

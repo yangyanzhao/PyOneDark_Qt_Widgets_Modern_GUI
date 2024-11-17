@@ -81,11 +81,11 @@ class UserInformationTokenListWidget(QWidget):
         token_list = api_login_list(token_info['value'])
         if token_list:
             for key, value in token_list.items():
-                if token_info['value'] == value:
+                if token_info['value'] == key:
                     # 本机
-                    key = f'<span style="color: red; font-size: 16px;"><b>{key}</b></span>'
+                    value = f'<span style="color: red; font-size: 16px;"><b>{value}</b></span>'
                 self.token_list_widget.add_setting(
-                    widget=TokenWidget(self, key, value))
+                    widget=TokenWidget(self, value, key))
 
         self.token_list_widget.task_card_lay.addStretch()
         self.token_list_widget.add_setting(widget=self.personal_button)

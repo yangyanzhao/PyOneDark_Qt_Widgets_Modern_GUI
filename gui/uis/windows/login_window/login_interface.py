@@ -1,4 +1,5 @@
 import asyncio
+import datetime
 import sys
 
 from PySide2.QtGui import QIcon, QPixmap, QColor, Qt, QCloseEvent, QPalette
@@ -79,8 +80,7 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
     def set_wrapper(self, wrapper):
         self.wrapper = wrapper
 
-    @asyncSlot()
-    async def on_login(self):
+    def on_login(self):
         host = self.lineEdit.text()
         port = self.lineEdit_2.text()
         username = self.lineEdit_3.text()
@@ -101,15 +101,22 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
             print(result)
             self.check_token()
         else:
-            MMessage.error(result['msg'], parent=self.wrapper)
+            MMessage.error(result['msg'], parent=self)
 
     @asyncSlot()
     async def on_logout(self, parent):
         logout_result = api_logout_user(satoken=self.line_edit_token.text())
         # 清除Token
         self.line_edit_token.setText(None)
-        self.check_token()
+        # 清除用户数据
+        data_session_storage.set_field("nickname", None)
+        data_session_storage.set_field("total_token", None)
+        data_session_storage.set_field("online_token", None)
+        data_session_storage.set_field("mobile", None)
+        data_session_storage.set_field("expirationDate",None)
         MMessage.success("退出成功", parent=parent)
+        self.check_token()
+
 
     def check_token(self):
         # 检测Token有效性
@@ -131,6 +138,8 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
             data_session_storage.set_field("nickname", nickname)
             data_session_storage.set_field("total_token", allowTokenNumber)
             data_session_storage.set_field("online_token", online_number)
+            data_session_storage.set_field("mobile", mobile)
+            data_session_storage.set_field("expirationDate", datetime.datetime.fromtimestamp(expirationDate/1000).strftime("%Y-%m-%d"))
             # 如果有效
             self.logged_in = True
             self.lineEdit.setVisible(False)
