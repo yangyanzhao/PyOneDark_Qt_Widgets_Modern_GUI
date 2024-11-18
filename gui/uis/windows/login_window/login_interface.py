@@ -1,5 +1,6 @@
 import asyncio
 import datetime
+import socket
 import sys
 
 from PySide2.QtGui import QIcon, QPixmap, QColor, Qt, QCloseEvent, QPalette
@@ -87,7 +88,7 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
         port = self.lineEdit_2.text()
         username = self.lineEdit_3.text()
         password = self.lineEdit_4.text()
-        result = api_login_user(username, password, device='电脑一', satoken=self.line_edit_token.text())
+        result = api_login_user(username, password, device=socket.gethostname(), satoken=self.line_edit_token.text())
         if result['code'] == 0:
             self.logged_in = True
             MMessage.success("登录成功", parent=self)
