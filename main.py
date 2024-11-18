@@ -2,6 +2,7 @@
 # 程序启动文件，并编辑菜单与页面之间的导航连接。
 # ///////////////////////////////////////////////////////////////
 import asyncio
+import time
 
 import qasync
 from dayu_widgets import MTheme
@@ -11,6 +12,7 @@ from gui.uis.windows.login_window.login_interface import LoginWindow
 from gui.uis.windows.main_window.functions_main_window import *
 import os
 
+from gui.uis.windows.startup_window.main import SplashScreen
 from gui.utils.file_lock import FileLock
 from gui.utils.frameless_dialog_wrapper import FramelessDialogWrapper
 from gui.utils.frameless_window_wrapper import FramelessWindowWrapper
@@ -67,7 +69,7 @@ class MainWindow(QMainWindow):
                                                widget_property="text")
         # 显示 窗口
         # ///////////////////////////////////////////////////////////////
-        self.show()
+        # self.show()
 
     # 左侧菜单按钮已发布
     # 按钮点击时运行
@@ -217,7 +219,7 @@ if __name__ == "__main__":
     loop = qasync.QEventLoop(app)
     asyncio.set_event_loop(loop)
     # 创建窗口
-    main_window = MainWindow()
+    main_window = SplashScreen(MainWindow)
     setup_main_theme(main_window)
     with loop:
         loop.run_forever()
