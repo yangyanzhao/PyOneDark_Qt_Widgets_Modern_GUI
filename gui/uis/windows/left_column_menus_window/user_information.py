@@ -60,7 +60,7 @@ class UserInformationWidget(QWidget, MFieldMixin):
         # 昵称 总数 在线
         self.post_layout = QHBoxLayout(self)
         infor_widget_0 = InforWidget(
-            name=f"<span style='color: #7bb8d7;font-family: KaiTi;font-size: 14px; font-weight: bold;'>部门</span>",
+            name=f"<span style='color: #7bb8d7;font-family: KaiTi;font-size: 14px; font-weight: bold;'>昵称</span>",
             value="HCP实施部")
         data_session_storage.widget_bind_value(field_name="nickname", widget=infor_widget_0.q_label_value,
                                                widget_property="text")
