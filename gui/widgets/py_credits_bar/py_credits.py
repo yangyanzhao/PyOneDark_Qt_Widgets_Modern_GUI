@@ -13,24 +13,25 @@
 # https://doc.qt.io/qtforpython/licenses.html
 #
 # ///////////////////////////////////////////////////////////////
-
+from gui.widgets.py_marquee_label.marquee_label import MarqueeLabel, AnimatedLabel
 # IMPORT QT CORE
 # ///////////////////////////////////////////////////////////////
 from qt_core import *
+
 
 # PY CREDITS BAR AND VERSION
 # ///////////////////////////////////////////////////////////////
 class PyCredits(QWidget):
     def __init__(
-        self,
-        copyright,
-        version,
-        bg_two,
-        font_family,
-        text_size,
-        text_description_color,
-        radius = 8,
-        padding = 10
+            self,
+            copyright,
+            version,
+            bg_two,
+            font_family,
+            text_size,
+            text_description_color,
+            radius=8,
+            padding=10,
     ):
         super().__init__()
 
@@ -50,13 +51,13 @@ class PyCredits(QWidget):
     def setup_ui(self):
         # ADD LAYOUT
         self.widget_layout = QHBoxLayout(self)
-        self.widget_layout.setContentsMargins(0,0,0,0)
+        self.widget_layout.setContentsMargins(0, 0, 0, 0)
 
         # BG STYLE
+        # background-color: {self._bg_two};
         style = f"""
         #bg_frame {{
             border-radius: {self._radius}px;
-            background-color: {self._bg_two};
         }}
         .QLabel {{
             font: {self._text_size}pt "{self._font_family}";
@@ -76,7 +77,7 @@ class PyCredits(QWidget):
 
         # ADD BG LAYOUT
         self.bg_layout = QHBoxLayout(self.bg_frame)
-        self.bg_layout.setContentsMargins(0,0,0,0)
+        self.bg_layout.setContentsMargins(0, 0, 0, 0)
 
         # ADD COPYRIGHT TEXT
         self.copyright_label = QLabel(self._copyright)
@@ -84,12 +85,16 @@ class PyCredits(QWidget):
 
         # ADD VERSION TEXT
         self.version_label = QLabel(self._version)
-        self.version_label.setAlignment(Qt.AlignVCenter)
+        self.version_label.setAlignment(Qt.AlignVCenter | Qt.AlignRight)
+
+        self.notify_label = QLabel()
+        self.notify_label.setAlignment(Qt.AlignVCenter)
 
         # SEPARATOR
         self.separator = QSpacerItem(20, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         # ADD TO LAYOUT
         self.bg_layout.addWidget(self.copyright_label)
+        self.bg_layout.addWidget(self.notify_label)
         self.bg_layout.addSpacerItem(self.separator)
         self.bg_layout.addWidget(self.version_label)

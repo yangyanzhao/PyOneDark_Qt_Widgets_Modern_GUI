@@ -53,11 +53,13 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
 
         # 数据绑定(账号)
         self.lineEdit_3.set_delay_duration(millisecond=2000)  # 延迟时间（毫秒
-        data_local_storage.widget_bind_value(widget=self.lineEdit_3, field_name="login_username", widget_property="text",
-                           widget_signal="textChanged")
+        data_local_storage.widget_bind_value(widget=self.lineEdit_3, field_name="login_username",
+                                             widget_property="text",
+                                             widget_signal="textChanged")
         # 数据绑定(记住密码)
-        data_local_storage.widget_bind_value(widget=self.checkBox, field_name="login_remember_me", widget_property="checked",
-                           widget_signal="toggled")
+        data_local_storage.widget_bind_value(widget=self.checkBox, field_name="login_remember_me",
+                                             widget_property="checked",
+                                             widget_signal="toggled")
         # 退出登录按钮
         self.quit_button = MPushButton(text='退出登录')
         self.quit_button.clicked.connect(lambda: self.on_logout(self.wrapper))
@@ -67,7 +69,7 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
             # 数据绑定(密码)
             self.lineEdit_4.set_delay_duration(millisecond=2000)  # 延迟时间（毫秒
             data_local_storage.widget_bind_value(widget=self.lineEdit_4, field_name="login_password",
-                               widget_property="text", widget_signal="textChanged")
+                                                 widget_property="text", widget_signal="textChanged")
         # 构建一个隐藏的LineEdit来放置Token，以后调试直接显示出来很方便。
         self.line_edit_token = MLineEdit()
         self.line_edit_token.setVisible(False)
@@ -75,7 +77,7 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
         # 数据绑定(Token)
         self.line_edit_token.set_delay_duration(millisecond=2000)  # 延迟时间（毫秒
         data_local_storage.widget_bind_value(widget=self.line_edit_token, field_name="login_token",
-                           widget_property="text", widget_signal="textChanged")
+                                             widget_property="text", widget_signal="textChanged")
 
     def set_wrapper(self, wrapper):
         self.wrapper = wrapper
@@ -88,7 +90,7 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
         result = api_login_user(username, password, device='电脑一', satoken=self.line_edit_token.text())
         if result['code'] == 0:
             self.logged_in = True
-            MMessage.success("登录成功", parent=self.wrapper if hasattr(self, "wrapper") else self)
+            MMessage.success("登录成功", parent=self)
             notify = result['msg']
             # 展示公告 TODO
             # 写入Token
@@ -113,10 +115,10 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
         data_session_storage.set_field("total_token", None)
         data_session_storage.set_field("online_token", None)
         data_session_storage.set_field("mobile", None)
-        data_session_storage.set_field("expirationDate",None)
+        data_session_storage.set_field("expirationDate", None)
+        data_session_storage.set_field("notice_information", None)
         MMessage.success("退出成功", parent=parent)
         self.check_token()
-
 
     def check_token(self):
         # 检测Token有效性
@@ -139,7 +141,9 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
             data_session_storage.set_field("total_token", allowTokenNumber)
             data_session_storage.set_field("online_token", online_number)
             data_session_storage.set_field("mobile", mobile)
-            data_session_storage.set_field("expirationDate", datetime.datetime.fromtimestamp(expirationDate/1000).strftime("%Y-%m-%d"))
+            data_session_storage.set_field("expirationDate",
+                                           datetime.datetime.fromtimestamp(expirationDate / 1000).strftime("%Y-%m-%d"))
+            data_session_storage.set_field("notice_information", check_result['msg'])
             # 如果有效
             self.logged_in = True
             self.lineEdit.setVisible(False)

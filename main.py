@@ -6,6 +6,7 @@ import asyncio
 import qasync
 from dayu_widgets import MTheme
 
+from gui.core.data_class import data_session_storage
 from gui.uis.windows.login_window.login_interface import LoginWindow
 from gui.uis.windows.main_window.functions_main_window import *
 import os
@@ -56,9 +57,14 @@ class MainWindow(QMainWindow):
         # 初始化登录窗口，但是不显示，处于隐藏状态。
         self.login_window = LoginWindow(self)
         setup_main_theme(self.login_window)
-        self.login_dialog_wrapper = FramelessDialogWrapper(target_widget=self.login_window,has_title_bar=True,attach_title_bar_layout=self.login_window.verticalLayout_1)
+        self.login_dialog_wrapper = FramelessDialogWrapper(target_widget=self.login_window, has_title_bar=True,
+                                                           attach_title_bar_layout=self.login_window.verticalLayout_1)
         self.login_window.set_wrapper(self.login_dialog_wrapper)
         self.login_window.check_token()
+
+        # 绑定公告栏数据
+        data_session_storage.widget_bind_value(field_name="notice_information", widget=self.ui.credits.notify_label,
+                                               widget_property="text")
         # 显示 窗口
         # ///////////////////////////////////////////////////////////////
         self.show()
