@@ -72,7 +72,7 @@ class SystemTrayTool:
             # 当用户点击关闭按钮时，最小化到托盘而不是关闭程序
             self.widget.hide()  # 隐藏主窗口
             self.widget.tray_icon.showMessage("最小化到系统盘", "程序已最小化到系统托盘。",
-                                         QIcon(Functions.set_svg_image("logo.svg")), 1000)
+                                              QIcon(Functions.set_svg_image("logo.svg")), 1000)
             event.ignore()  # 忽略关闭事件
 
         setattr(self.widget, "closeEvent", closeEvent)

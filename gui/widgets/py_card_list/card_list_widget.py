@@ -1,14 +1,11 @@
 import asyncio
 from PySide2.QtWidgets import QApplication, QWidget, QVBoxLayout
 from Qt import QtWidgets
-from dayu_widgets import MFieldMixin, MTheme, MMeta, MSwitch, MPushButton, MLabel
-from dayu_widgets.mixin import hover_shadow_mixin, cursor_mixin, focus_shadow_mixin
-from dayu_widgets.qt import MPixmap, get_scale_factor
+from dayu_widgets import MSwitch, MPushButton, MLabel
+from dayu_widgets.mixin import hover_shadow_mixin, cursor_mixin
 from qasync import QEventLoop
-from tinydb import TinyDB, Query
 
-from gui.utils.theme_util import setup_main_theme, get_theme
-from modules.wx_auto.database.tiny_database import table_settings, table_memory
+from gui.utils.theme_util import setup_main_theme
 
 
 @hover_shadow_mixin

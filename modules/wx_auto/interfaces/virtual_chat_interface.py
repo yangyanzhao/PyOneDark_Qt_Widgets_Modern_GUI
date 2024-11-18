@@ -10,15 +10,15 @@ from dayu_widgets import MTheme, MFieldMixin, dayu_theme, MTableModel, MSortFilt
     MTableView, MPushButtonGroup, MPushButton, MMessage
 from tinydb.table import Document
 
-from modules.wx_auto.custom_widget.CPaginationBar import CPaginationBar, FlatStyle
-from modules.wx_auto.database.tiny_database import table_demo
+from gui.widgets.c_pagination_bar.CPaginationBar import CPaginationBar, FlatStyle
+from modules.wx_auto.db.tiny_db_service import TABLE_WX_VIRTUAL_CHAT
 from modules.wx_auto.icons import icons
 
 
 class VirtualChatInterface(QWidget, MFieldMixin):
     def __init__(self, parent=None):
         super(VirtualChatInterface, self).__init__(parent)
-        self.table_demo = table_demo
+        self.table_virtual_chat = TABLE_WX_VIRTUAL_CHAT
         self.page_number = 1  # 当前页码
         self.page_size = 5  # 每页数量
         self.total_count = 0  # 总数量
@@ -143,7 +143,7 @@ class VirtualChatInterface(QWidget, MFieldMixin):
         加载数据
         :return:
         """
-        self.total_count = len(self.table_demo)  # 数据总数
+        self.total_count = len(self.table_virtual_chat)  # 数据总数
         self.total_page = ceil(self.total_count / self.page_size)  # 计算总页码
         # 防止超页
         if self.page_number > self.total_page:
@@ -154,7 +154,7 @@ class VirtualChatInterface(QWidget, MFieldMixin):
 
         # 计算起始索引
         start_index = (self.page_number - 1) * self.page_size
-        self.data_list = self.table_demo.all()[start_index:start_index + self.page_size]
+        self.data_list = self.table_virtual_chat.all()[start_index:start_index + self.page_size]
         self.table_model.set_data_list(self.data_list)
 
     @Slot()
@@ -171,14 +171,14 @@ class VirtualChatInterface(QWidget, MFieldMixin):
             row_data: Document = model.get_data_list()[row]  # 当前行数据，xxx_checked是否选中
             copy = row_data.copy()
             del copy['_parent']  # 去除出循环引用
-            self.table_demo.update(copy, doc_ids=[row_data.doc_id])
+            self.table_virtual_chat.update(copy, doc_ids=[row_data.doc_id])
 
     def add(self):
         """
         新增数据
         :return:
         """
-        self.table_demo.insert({
+        self.table_virtual_chat.insert({
             "name": "",
             "prompt": "",
             "message_number": 0,
@@ -201,7 +201,7 @@ class VirtualChatInterface(QWidget, MFieldMixin):
         checked_doc_ids = [data.doc_id for data in data_list if data.get("name_checked", 0) == 2]
         if len(checked_doc_ids) == 0:
             MMessage.error("Please select the data first.", parent=self)
-        self.table_demo.remove(doc_ids=checked_doc_ids)
+        self.table_virtual_chat.remove(doc_ids=checked_doc_ids)
         self.reload_data()
 
     def page_changed_handle(self, page):

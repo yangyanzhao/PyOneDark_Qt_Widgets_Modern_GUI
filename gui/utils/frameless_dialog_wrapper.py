@@ -8,6 +8,10 @@ from gui.core.json_themes import Themes
 from gui.images import icons
 from gui.widgets import PyTitleBar, PyGrips
 
+"""
+弹窗包装器，用于将普通弹窗，包装成符合当前UI风格的边框和标题栏，标题栏位置可选择（默认为包装器顶部）。
+"""
+
 
 class FramelessDialogWrapper(QDialog):
     def __init__(self, target_widget: QWidget, has_title_bar=True, attach_title_bar_layout: QVBoxLayout = None):

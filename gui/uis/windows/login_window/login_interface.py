@@ -10,16 +10,14 @@ from qasync import QEventLoop, asyncSlot
 from tinydb import Query
 
 from api.auth import api_login_user, api_token_check, api_logout_user
-from gui.core.data_class import data_session_storage, data_local_storage
-from gui.core.json_settings import Settings
-from gui.core.json_themes import Themes
+from db.data_storage_service import py_one_dark_data_local_storage, py_one_dark_data_session_storage
+from db.tiny_db_service import TABLE_PY_ONE_DARK_LOCAL_STORAGE
 from gui.uis.windows.login_window.Ui_LoginWindow import Ui_Form
 from gui.images import icons
 from gui.uis.windows.main_window.functions_main_window import MainFunctions
 from gui.utils.frameless_window_wrapper import FramelessWindowWrapper
 from gui.utils.position_util import center_point_alignment
 from gui.utils.theme_util import setup_main_theme
-from modules.wx_auto.database.tiny_database import table_local_storage
 
 
 def isWin11():
@@ -30,7 +28,7 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
 
     def __init__(self, parent=None):
         super().__init__()
-        self.table_local_storage = table_local_storage
+        self.table_local_storage = TABLE_PY_ONE_DARK_LOCAL_STORAGE
         self.parent = parent
         self.setupUi(self)
         self.label.setScaledContents(False)
@@ -54,11 +52,11 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
 
         # 数据绑定(账号)
         self.lineEdit_3.set_delay_duration(millisecond=2000)  # 延迟时间（毫秒
-        data_local_storage.widget_bind_value(widget=self.lineEdit_3, field_name="login_username",
+        py_one_dark_data_local_storage.widget_bind_value(widget=self.lineEdit_3, field_name="login_username",
                                              widget_property="text",
                                              widget_signal="textChanged")
         # 数据绑定(记住密码)
-        data_local_storage.widget_bind_value(widget=self.checkBox, field_name="login_remember_me",
+        py_one_dark_data_local_storage.widget_bind_value(widget=self.checkBox, field_name="login_remember_me",
                                              widget_property="checked",
                                              widget_signal="toggled")
         # 退出登录按钮
@@ -69,7 +67,7 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
         if self.checkBox.isChecked():
             # 数据绑定(密码)
             self.lineEdit_4.set_delay_duration(millisecond=2000)  # 延迟时间（毫秒
-            data_local_storage.widget_bind_value(widget=self.lineEdit_4, field_name="login_password",
+            py_one_dark_data_local_storage.widget_bind_value(widget=self.lineEdit_4, field_name="login_password",
                                                  widget_property="text", widget_signal="textChanged")
         # 构建一个隐藏的LineEdit来放置Token，以后调试直接显示出来很方便。
         self.line_edit_token = MLineEdit()
@@ -77,7 +75,7 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
         self.verticalLayout_2.addWidget(self.line_edit_token)
         # 数据绑定(Token)
         self.line_edit_token.set_delay_duration(millisecond=2000)  # 延迟时间（毫秒
-        data_local_storage.widget_bind_value(widget=self.line_edit_token, field_name="login_token",
+        py_one_dark_data_local_storage.widget_bind_value(widget=self.line_edit_token, field_name="login_token",
                                              widget_property="text", widget_signal="textChanged")
 
     def set_wrapper(self, wrapper):
@@ -112,12 +110,12 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
         # 清除Token
         self.line_edit_token.setText(None)
         # 清除用户数据
-        data_session_storage.set_field("nickname", None)
-        data_session_storage.set_field("total_token", None)
-        data_session_storage.set_field("online_token", None)
-        data_session_storage.set_field("mobile", None)
-        data_session_storage.set_field("expirationDate", None)
-        data_session_storage.set_field("notice_information", None)
+        py_one_dark_data_session_storage.set_field("nickname", None)
+        py_one_dark_data_session_storage.set_field("total_token", None)
+        py_one_dark_data_session_storage.set_field("online_token", None)
+        py_one_dark_data_session_storage.set_field("mobile", None)
+        py_one_dark_data_session_storage.set_field("expirationDate", None)
+        py_one_dark_data_session_storage.set_field("notice_information", None)
         MMessage.success("退出成功", parent=parent)
         self.check_token()
 
@@ -138,13 +136,13 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
             expirationDate = check_result['data']['user']['expirationDate']
             online_number = check_result['data']['online_number']
             msg = check_result['msg']
-            data_session_storage.set_field("nickname", nickname)
-            data_session_storage.set_field("total_token", allowTokenNumber)
-            data_session_storage.set_field("online_token", online_number)
-            data_session_storage.set_field("mobile", mobile)
-            data_session_storage.set_field("expirationDate",
+            py_one_dark_data_session_storage.set_field("nickname", nickname)
+            py_one_dark_data_session_storage.set_field("total_token", allowTokenNumber)
+            py_one_dark_data_session_storage.set_field("online_token", online_number)
+            py_one_dark_data_session_storage.set_field("mobile", mobile)
+            py_one_dark_data_session_storage.set_field("expirationDate",
                                            datetime.datetime.fromtimestamp(expirationDate / 1000).strftime("%Y-%m-%d"))
-            data_session_storage.set_field("notice_information", check_result['msg'])
+            py_one_dark_data_session_storage.set_field("notice_information", check_result['msg'])
             # 如果有效
             self.logged_in = True
             self.lineEdit.setVisible(False)

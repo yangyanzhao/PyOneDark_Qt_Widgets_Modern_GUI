@@ -1,11 +1,15 @@
 from PySide2.QtWidgets import QWidget
 
+"""
+位置工具，将当前窗口的位置位置，设定到锚定窗口的中心位置。
+"""
+
 
 def center_point_alignment(widget_a: QWidget, widget_current: QWidget):
     """
-    將当前QWidget中心点坐标，设置为目标QWidget中心点坐标
-    :param widget_a:
-    :param widget_current:
+    將当前QWidget中心点坐标，设置为锚定QWidget中心点坐标
+    :param widget_a: 锚定窗口
+    :param widget_current: 当前窗口
     :return:
     """
     # 获取 widget_a 的矩形区域

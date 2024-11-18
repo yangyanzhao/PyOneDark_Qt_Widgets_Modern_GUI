@@ -1,12 +1,21 @@
+import asyncio
 import os
 import atexit
 
 import ctypes
+import sys
 import time
 
 import psutil
-import win32gui
-import win32process
+import qasync
+from PySide2.QtWidgets import QWidget, QApplication
+
+from gui.uis.windows.startup_window.main import SplashScreen
+from gui.utils.theme_util import setup_main_theme
+
+"""
+APP锁，防止打开多个实例。
+"""
 
 
 def get_all_window_mapping():
@@ -23,7 +32,7 @@ def get_all_window_mapping():
             buffer = ctypes.create_unicode_buffer(length)
             ctypes.windll.user32.GetWindowTextW(hwnd, buffer, length)
             title = buffer.value if buffer.value else "No Title"
-            print(f"显式Window handle: {hwnd}, Title: {title}")
+            # print(f"显式Window handle: {hwnd}, Title: {title}")
             handles_mapping[title] = hwnd
         return True
 
@@ -57,6 +66,7 @@ def get_all_window_mapping():
         print(f"最小化Window handle: {hwnd}, Title: {title}")
         handles_mapping[title] = hwnd
     return handles_mapping
+
 
 class FileLock:
     lockfile = "app.lock"
@@ -151,5 +161,33 @@ class FileLock:
             return False
 
 
-if __name__ == '__main__':
-    get_all_window_mapping()
+class DemoWindow(QWidget):
+    def __init__(self):
+        super(DemoWindow, self).__init__()
+        self.setGeometry(100, 100, 300, 200)
+        self.setWindowTitle(app_name)
+
+
+app_name = "Demo Window"
+
+if __name__ == "__main__":
+    # 创建主循环
+    app = QApplication()
+    # 创建异步事件循环
+    loop = qasync.QEventLoop(app)
+    asyncio.set_event_loop(loop)
+
+    # 锁定实例
+    online = FileLock.is_pid_running(FileLock.get_pid())
+    if online:
+        FileLock.find_and_activate_window(app_name)
+        sys.exit(0)
+    else:
+        # 创建文件锁
+        lock = FileLock()
+
+    # 创建窗口
+    main_window = SplashScreen(DemoWindow)
+    setup_main_theme(main_window)
+    with loop:
+        loop.run_forever()

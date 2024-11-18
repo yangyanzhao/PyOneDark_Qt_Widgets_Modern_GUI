@@ -7,7 +7,7 @@ import time
 import qasync
 from dayu_widgets import MTheme
 
-from gui.core.data_class import data_session_storage
+from db.data_storage_service import py_one_dark_data_session_storage
 from gui.uis.windows.login_window.login_interface import LoginWindow
 from gui.uis.windows.main_window.functions_main_window import *
 import os
@@ -65,7 +65,7 @@ class MainWindow(QMainWindow):
         self.login_window.check_token()
 
         # 绑定公告栏数据
-        data_session_storage.widget_bind_value(field_name="notice_information", widget=self.ui.credits.notify_label,
+        py_one_dark_data_session_storage.widget_bind_value(field_name="notice_information", widget=self.ui.credits.notify_label,
                                                widget_property="text")
         # 显示 窗口
         # ///////////////////////////////////////////////////////////////

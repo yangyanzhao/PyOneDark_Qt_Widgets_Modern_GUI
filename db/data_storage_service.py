@@ -1,6 +1,12 @@
 from PySide2.QtWidgets import QWidget
 from dayu_widgets import MFieldMixin
-from tinydb import TinyDB, Query
+from tinydb import Query
+
+from db.tiny_db_service import TABLE_PY_ONE_DARK_LOCAL_STORAGE
+
+"""
+SessionStorage和LocalStorage
+"""
 
 
 # 作为数据SessionStorage存储类
@@ -18,8 +24,8 @@ class DataSessionStorage(MFieldMixin):
         :param widget_signal: 控件的数据改变信号（不知道信号的，可以用后边的方法进行遍历），如果不传，则时单项绑定，数据绑定到控件，但是控件自身数据改变不会通过信号回传到本地数据中。
         :param callback: 数据发生改变时的主动回调，一般不传入。
         """
-        data_session_storage.register_field(name=field_name)
-        data_session_storage.bind(data_name=field_name, widget=widget, qt_property=widget_property,
+        py_one_dark_data_session_storage.register_field(name=field_name)
+        py_one_dark_data_session_storage.bind(data_name=field_name, widget=widget, qt_property=widget_property,
                                   signal=widget_signal, callback=callback)
 
 
@@ -27,10 +33,8 @@ class DataSessionStorage(MFieldMixin):
 class DataLocalStorage(MFieldMixin):
     def __init__(self):
         super(DataLocalStorage, self).__init__()
-        # 数据库句柄
-        self.tiny_db = TinyDB(path='json_db.json', ensure_ascii=False, encoding='utf-8')
         # 表
-        self.table_local_storage = self.tiny_db.table('LocalStorage')
+        self.table_local_storage = TABLE_PY_ONE_DARK_LOCAL_STORAGE
 
     def widget_bind_value(self, widget: QWidget, field_name: str, widget_property: str,
                           widget_signal: str, callback=None):
@@ -70,5 +74,5 @@ class DataLocalStorage(MFieldMixin):
 
 
 # 开局直接实例化这两个类，作为全局使用。
-data_session_storage = DataSessionStorage()
-data_local_storage = DataLocalStorage()
+py_one_dark_data_session_storage = DataSessionStorage()
+py_one_dark_data_local_storage = DataLocalStorage()

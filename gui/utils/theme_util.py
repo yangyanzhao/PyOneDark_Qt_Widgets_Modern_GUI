@@ -3,6 +3,10 @@ from dayu_widgets import MTheme
 from gui.core.json_settings import Settings
 from gui.core.json_themes import Themes
 
+"""
+设置控件的样式为统一样式
+"""
+
 
 def setup_main_theme(widget):
     themes = Themes()
@@ -22,6 +26,11 @@ def setup_main_theme(widget):
     m_theme.background_out_color = widget.themes["app_color"]["bg_three"]
     # 应用到当前组件
     m_theme.apply(widget)
+
+
+"""
+获取主题 MTheme的实例
+"""
 
 
 def get_theme():

@@ -1,6 +1,10 @@
 import json
 import requests
 
+"""
+权限控制API
+"""
+
 
 def api_login_user(username, password, device, satoken=None):
     # 登录

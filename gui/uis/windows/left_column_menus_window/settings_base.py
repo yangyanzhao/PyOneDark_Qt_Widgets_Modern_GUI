@@ -13,7 +13,7 @@ from gui.core.json_themes import Themes
 from gui.utils.start_up_manager import StartupManager
 from gui.utils.window_task_manager import create_startup_task, create_shutdown_task, delete_task, check_task_status, \
     get_task_next_run_time, create_startup_current_program_task
-from modules.wx_auto.database.settings_widget import MSettingsWidget, MSettingMeta
+from modules.wx_auto.db.settings_widget import MSettingsWidget, MSettingMeta
 from modules.wx_auto.icons import icons
 
 

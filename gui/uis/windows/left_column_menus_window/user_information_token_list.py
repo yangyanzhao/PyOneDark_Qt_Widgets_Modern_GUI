@@ -8,17 +8,17 @@ from dayu_widgets import MLabel
 from tinydb import Query
 
 from api.auth import api_login_list, api_logout_user_by_satoken
-from gui.core.data_class import data_session_storage
+from db.data_storage_service import py_one_dark_data_session_storage
+from db.tiny_db_service import TABLE_PY_ONE_DARK_LOCAL_STORAGE
 from gui.images import icons
 from gui.utils.theme_util import setup_main_theme
-from modules.wx_auto.database.card_list_widget import MCardListWidget
-from modules.wx_auto.database.tiny_database import table_local_storage
+from gui.widgets.py_card_list.card_list_widget import MCardListWidget
 
 
 class TokenWidget(QWidget):
     def __init__(self, parent, device: str, token: str):
         super(TokenWidget, self).__init__()
-        self.table_local_storage = table_local_storage
+        self.table_local_storage = TABLE_PY_ONE_DARK_LOCAL_STORAGE
         self.layout = QVBoxLayout(self)
         self.layout.setAlignment(Qt.AlignCenter)
         self.parent = parent
@@ -54,17 +54,17 @@ class TokenWidget(QWidget):
         self.parent.load_token_list()
         if token_info['value'] == self.token:
             # 清除用户数据
-            data_session_storage.set_field("nickname", None)
-            data_session_storage.set_field("total_token", None)
-            data_session_storage.set_field("online_token", None)
-            data_session_storage.set_field("mobile", None)
-            data_session_storage.set_field("expirationDate", None)
+            py_one_dark_data_session_storage.set_field("nickname", None)
+            py_one_dark_data_session_storage.set_field("total_token", None)
+            py_one_dark_data_session_storage.set_field("online_token", None)
+            py_one_dark_data_session_storage.set_field("mobile", None)
+            py_one_dark_data_session_storage.set_field("expirationDate", None)
 
 
 class UserInformationTokenListWidget(QWidget):
     def __init__(self, parent=None):
         super(UserInformationTokenListWidget, self).__init__(parent)
-        self.table_local_storage = table_local_storage
+        self.table_local_storage = TABLE_PY_ONE_DARK_LOCAL_STORAGE
         self.parent = parent
         self.setWindowTitle("令牌列表")
         setup_main_theme(self)
@@ -86,14 +86,15 @@ class UserInformationTokenListWidget(QWidget):
             if widget:
                 widget.deleteLater()
         token_info = self.table_local_storage.get(Query().key == "token")
-        token_list = api_login_list(token_info['value'])
-        if token_list:
-            for key, value in token_list.items():
-                if token_info['value'] == key:
-                    # 本机
-                    value = f'<span style="color: red; font-size: 16px;"><b>{value}</b></span>'
-                self.token_list_widget.add_setting(
-                    widget=TokenWidget(self, value, key))
+        if token_info:
+            token_list = api_login_list(token_info['value'])
+            if token_list:
+                for key, value in token_list.items():
+                    if token_info['value'] == key:
+                        # 本机
+                        value = f'<span style="color: red; font-size: 16px;"><b>{value}</b></span>'
+                    self.token_list_widget.add_setting(
+                        widget=TokenWidget(self, value, key))
 
         self.token_list_widget.task_card_lay.addStretch()
         self.token_list_widget.add_setting(widget=self.personal_button)

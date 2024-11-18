@@ -6,8 +6,8 @@ from dayu_widgets import MTheme, MLineEdit, \
     MFieldMixin, MToolButton, MSwitch, MSpinBox
 
 from gui.utils.theme_util import setup_main_theme
-from modules.wx_auto.database.settings_widget import MSettingsWidget
-from modules.wx_auto.database.tiny_database import table_wx_chat_group_list, table_settings
+from modules.wx_auto.db.settings_widget import MSettingsWidget
+from modules.wx_auto.db.tiny_db_service import TABLE_WX_CHAT_GROUP_LIST
 from modules.wx_auto.icons import icons
 
 NICKNAME = 'nickname'  # 昵称
@@ -22,8 +22,7 @@ class SettingInterface(QWidget, MFieldMixin):
     def __init__(self, parent=None):
         super(SettingInterface, self).__init__(parent)
         # 初始化加载数据库
-        self.table_WeChatGroupList = table_wx_chat_group_list
-        self.table_Settings = table_settings
+        self.table_WeChatGroupList = TABLE_WX_CHAT_GROUP_LIST
         # 初始化UI
         self.init_ui()
 

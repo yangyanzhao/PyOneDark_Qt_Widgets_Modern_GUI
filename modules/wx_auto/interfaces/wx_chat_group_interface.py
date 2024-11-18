@@ -12,17 +12,17 @@ from dayu_widgets import MTheme, MFieldMixin, dayu_theme, MTableModel, MSortFilt
     MTableView, MPushButtonGroup, MPushButton, MMessage, MLoadingWrapper, MSpinBox
 from tinydb.table import Document
 
-from gui.core.data_class import data_local_storage
-from modules.wx_auto.custom_widget.CPaginationBar import CPaginationBar, FlatStyle
-from modules.wx_auto.database.settings_widget import MSettingsWidget
-from modules.wx_auto.database.tiny_database import table_wx_chat_group_list
+from gui.widgets.c_pagination_bar.CPaginationBar import CPaginationBar, FlatStyle
+from modules.wx_auto.db.data_storage_service import data_wx_local_storage
+from modules.wx_auto.db.settings_widget import MSettingsWidget
+from modules.wx_auto.db.tiny_db_service import TABLE_WX_CHAT_GROUP_LIST
 from modules.wx_auto.icons import icons
 
 
 class WxChatGroupInterface(QWidget, MFieldMixin):
     def __init__(self, parent=None):
         super(WxChatGroupInterface, self).__init__(parent)
-        self.table_wx_chat_group_list = table_wx_chat_group_list
+        self.table_wx_chat_group_list = TABLE_WX_CHAT_GROUP_LIST
         self.page_number = 1  # 当前页码
         self.page_size = 5  # 每页数量
         self.total_count = 0  # 总数量
@@ -250,7 +250,7 @@ class WxChatGroupInterface(QWidget, MFieldMixin):
         m_spin_box_thumbs_up_number = MSpinBox()
         m_spin_box_thumbs_up_number.setRange(1, 100)
         m_spin_box_thumbs_up_number.setValue(20)
-        data_local_storage.widget_bind_value(widget=m_spin_box_thumbs_up_number,
+        data_wx_local_storage.widget_bind_value(widget=m_spin_box_thumbs_up_number,
                                              field_name="thumbs_up_number",
                                              widget_property="value", widget_signal="valueChanged")
         layout.addWidget(m_spin_box_thumbs_up_number)

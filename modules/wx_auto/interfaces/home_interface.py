@@ -9,10 +9,10 @@ from qasync import QEventLoop, asyncSlot
 from dayu_widgets import MTheme, MListView, MPushButtonGroup, MPushButton, MLineEdit, \
     MFieldMixin, MLoadingWrapper, dayu_theme, MToolButton, MMenu, MComboBox, MTextEdit
 
-from gui.core.data_class import data_local_storage
+from db.data_storage_service import py_one_dark_data_local_storage
 from gui.utils.theme_util import setup_main_theme
-from modules.wx_auto.database.tiny_database import table_wx_chat_group_list, table_settings, table_prompts
-from modules.wx_auto.database.settings_widget import MSettingsWidget
+from modules.wx_auto.db.settings_widget import MSettingsWidget
+from modules.wx_auto.db.tiny_db_service import TABLE_WX_CHAT_GROUP_LIST
 from modules.wx_auto.icons import icons
 
 
@@ -20,9 +20,7 @@ class HomeInterface(QWidget, MFieldMixin):
     def __init__(self, parent=None):
         super(HomeInterface, self).__init__(parent)
         # 初始化加载数据库
-        self.table_WeChatGroupList = table_wx_chat_group_list
-        self.table_Settings = table_settings
-        self.table_Prompts = table_prompts
+        self.table_WeChatGroupList = TABLE_WX_CHAT_GROUP_LIST
         # 初始化UI
         self.init_ui()
 
@@ -698,8 +696,6 @@ These examples showcase Synthia's human-like ability to engage in casual, relata
                 ],
             },
         ]
-        # 这里要从数据库里拿取
-        prompts_all = self.table_Prompts.all()
         # 提示词预览与编辑框
         text_edit = MTextEdit().autosize()
         # 初始化显示
@@ -736,7 +732,7 @@ These examples showcase Synthia's human-like ability to engage in casual, relata
         combo_box.set_formatter(formatter_show)  # 设置级联显示格式
         combo_box.set_menu(menu)
         # 双向绑定
-        data_local_storage.widget_bind_value(widget=combo_box, field_name="prompt_menu_select",
+        py_one_dark_data_local_storage.widget_bind_value(widget=combo_box, field_name="prompt_menu_select",
                                              widget_property="value", widget_signal="sig_value_changed")
         v_layout.addWidget(combo_box)
         v_layout.addWidget(text_edit)
@@ -746,7 +742,7 @@ These examples showcase Synthia's human-like ability to engage in casual, relata
         friend_edit.setPlaceholderText("请输入名称")
         friend_edit.set_prefix_widget(MToolButton().svg(path=icons['微信好友.svg']).icon_only())
         friend_edit.set_delay_duration(millisecond=2000)  # 延迟时间（毫秒）
-        data_local_storage.widget_bind_value(widget=friend_edit,
+        py_one_dark_data_local_storage.widget_bind_value(widget=friend_edit,
                                              field_name="wx_friend_chat_assistant",
                                              widget_property="text",
                                              widget_signal="textChanged")

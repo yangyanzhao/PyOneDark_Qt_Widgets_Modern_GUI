@@ -1,14 +1,11 @@
 import asyncio
 from PySide2.QtWidgets import QApplication, QWidget
 from Qt import QtWidgets
-from dayu_widgets import MFieldMixin, MTheme, MMeta, MSwitch
+from dayu_widgets import MFieldMixin, MMeta, MSwitch
 from dayu_widgets.qt import MPixmap
 from qasync import QEventLoop
-from tinydb import TinyDB, Query
-
-from gui.core.data_class import data_local_storage
 from gui.utils.theme_util import setup_main_theme
-from modules.wx_auto.database.tiny_database import table_settings, table_memory
+from modules.wx_auto.db.data_storage_service import data_wx_local_storage
 
 
 class MSettingMeta(MMeta):
@@ -50,7 +47,7 @@ class MSettingsWidget(QtWidgets.QWidget, MFieldMixin):
     def add_setting(self, widget: QWidget, field_name: str, widget_property: str, widget_signal: str,
                     cover=None, avatar=None, title=None, description=None, extra=False, parent=None):
         # 数据双向绑定
-        data_local_storage.widget_bind_value(widget=widget,
+        data_wx_local_storage.widget_bind_value(widget=widget,
                                              field_name=field_name,
                                              widget_property=widget_property,
                                              widget_signal=widget_signal)
@@ -74,7 +71,7 @@ class MSettingsWidget(QtWidgets.QWidget, MFieldMixin):
         :param field_name:
         :return:
         """
-        field_data = table_settings.get(cond=Query()[field_name].exists())
+        field_data = data_wx_local_storage.get(field_name=field_name)
         # 设置读取值
         if field_data and field_data[field_name]:
             return field_data[field_name]

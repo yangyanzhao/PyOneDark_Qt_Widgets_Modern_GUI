@@ -1,7 +1,11 @@
 import os
 import sys
 
-import win32timezone
+"""
+程序开机自启
+"""
+
+
 class StartupManager:
     """
     开机启动管理器
@@ -10,6 +14,10 @@ class StartupManager:
 
     @staticmethod
     def check_startup_status():
+        """
+        检测开机自启状态
+        :return:
+        """
         bat_path = os.path.join(os.getenv('APPDATA'), 'Microsoft', 'Windows', 'Start Menu', 'Programs', 'Startup',
                                 f'{StartupManager.bat_name}.bat')
         if os.path.exists(bat_path):
@@ -19,6 +27,10 @@ class StartupManager:
 
     @staticmethod
     def add_to_startup():
+        """
+        开启开机自启
+        :return:
+        """
         executable_path = sys.executable
         executable_name = os.path.basename(executable_path)
         file_path = os.path.join(os.getcwd(), f"{executable_name}")
@@ -30,6 +42,10 @@ class StartupManager:
 
     @staticmethod
     def remove_from_startup():
+        """
+        移除开机自启
+        :return:
+        """
         bat_path = os.path.join(os.getenv('APPDATA'), 'Microsoft', 'Windows', 'Start Menu', 'Programs', 'Startup',
                                 f'{StartupManager.bat_name}.bat')
         print(bat_path)

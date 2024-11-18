@@ -6,11 +6,11 @@ from PySide2.QtCore import Qt, QSize
 from PySide2.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout
 from dayu_widgets import MLabel
 
-from gui.core.data_class import data_session_storage
+from db.data_storage_service import py_one_dark_data_session_storage
 from gui.images import icons
 from gui.utils.theme_util import setup_main_theme
-from modules.wx_auto.custom_widget.CAvatar import CAvatar
 from gui.utils.position_util import center_point_alignment
+from gui.widgets.c_avatar.CAvatar import CAvatar
 
 
 class InforWidget(QWidget):
@@ -62,21 +62,21 @@ class UserInformationWidget(QWidget, MFieldMixin):
         infor_widget_0 = InforWidget(
             name=f"<span style='color: #7bb8d7;font-family: KaiTi;font-size: 14px; font-weight: bold;'>昵称</span>",
             value="HCP实施部")
-        data_session_storage.widget_bind_value(field_name="nickname", widget=infor_widget_0.q_label_value,
+        py_one_dark_data_session_storage.widget_bind_value(field_name="nickname", widget=infor_widget_0.q_label_value,
                                                widget_property="text")
         self.post_layout.addWidget(infor_widget_0)
 
         infor_widget_1 = InforWidget(
             name=f"<span style='color: #7bb8d7;font-family: KaiTi;font-size: 14px; font-weight: bold;'>总数</span>",
             value="10")
-        data_session_storage.widget_bind_value(field_name="total_token", widget=infor_widget_1.q_label_value,
+        py_one_dark_data_session_storage.widget_bind_value(field_name="total_token", widget=infor_widget_1.q_label_value,
                                                widget_property="text")
         self.post_layout.addWidget(infor_widget_1)
 
         infor_widget_2 = InforWidget(
             name=f"<span style='color: #7bb8d7;font-family: KaiTi;font-size: 14px; font-weight: bold;'>在线</span>",
             value="1")
-        data_session_storage.widget_bind_value(field_name="online_token", widget=infor_widget_2.q_label_value,
+        py_one_dark_data_session_storage.widget_bind_value(field_name="online_token", widget=infor_widget_2.q_label_value,
                                                widget_property="text")
         self.post_layout.addWidget(infor_widget_2)
 
@@ -90,7 +90,7 @@ class UserInformationWidget(QWidget, MFieldMixin):
         infor_widget_3 = InforWidget(avatar=c_avatar_phone,
                                      name=f"<span style='color: #808080;font-family: KaiTi;font-size: 14px;'>手机</span>",
                                      value="13888888888")
-        data_session_storage.widget_bind_value(field_name="mobile", widget=infor_widget_3.q_label_value,
+        py_one_dark_data_session_storage.widget_bind_value(field_name="mobile", widget=infor_widget_3.q_label_value,
                                                widget_property="text")
         self.phone_address_layout.addWidget(infor_widget_3)
 
@@ -99,7 +99,7 @@ class UserInformationWidget(QWidget, MFieldMixin):
         infor_widget_4 = InforWidget(avatar=c_avatar_address,
                                      name=f"<span style='color: #808080;font-family: KaiTi;font-size: 14px;'>过期时间</span>",
                                      value="2024:11:16 21:12:00")
-        data_session_storage.widget_bind_value(field_name="expirationDate", widget=infor_widget_4.q_label_value,
+        py_one_dark_data_session_storage.widget_bind_value(field_name="expirationDate", widget=infor_widget_4.q_label_value,
                                                widget_property="text")
         self.phone_address_layout.addWidget(infor_widget_4)
         self.phone_address_layout.setStretch(0, 2)
