@@ -7,10 +7,10 @@ from qasync import QEventLoop
 from dayu_widgets import MTheme, MFieldMixin, dayu_theme, MLineTabWidget
 
 from gui.core.json_themes import Themes
-from modules.wx_auto.interfaces.home_interface import HomeInterface
-from modules.wx_auto.interfaces.setting_interface import SettingInterface
-from modules.wx_auto.interfaces.virtual_chat_interface import VirtualChatInterface
-from modules.wx_auto.interfaces.wx_chat_group_interface import WxChatGroupInterface
+from modules.example.interfaces.example_data1_crud_interface import ExampleData1Interface
+from modules.example.interfaces.example_data2_crud_interface import ExampleData2Interface
+from modules.example.interfaces.example_debug_interface import ExampleDebuggerInterface
+from modules.example.interfaces.example_setting_interface import ExampleSettingInterface
 
 
 class WxMainWidget(QWidget, MFieldMixin):
@@ -39,23 +39,19 @@ class WxMainWidget(QWidget, MFieldMixin):
         self.main_layout = QVBoxLayout()
         self.setLayout(self.main_layout)
 
-        # 主页
-        home_interface = HomeInterface()
-        # 数据管理
-        wx_chat_group_interface = WxChatGroupInterface()
-        # 客服
-        virtual_chat_interface = VirtualChatInterface()
-        # 配置页
-        setting_interface = SettingInterface()
+        example_debugger_interface = ExampleDebuggerInterface()
+        example_data1_interface = ExampleData1Interface()
+        example_data2_interface = ExampleData2Interface()
+        example_setting_interface = ExampleSettingInterface()
 
         # 导航条
         self.tab_center = MLineTabWidget(alignment=QtCore.Qt.AlignLeft)
         self.tab_center.set_dayu_size(dayu_theme.medium)
 
-        self.tab_center.add_tab(home_interface, {"text": "主页", "svg": "icons/主页.svg"})
-        self.tab_center.add_tab(wx_chat_group_interface, {"text": "数据管理", "svg": "icons/wx.svg"})
-        self.tab_center.add_tab(virtual_chat_interface, {"text": "客服", "svg": "icons/聊天.svg"})
-        self.tab_center.add_tab(setting_interface, {"text": "设置", "svg": "alert_line.svg"})
+        self.tab_center.add_tab(example_debugger_interface, {"text": "主页", "svg": "icons/主页.svg"})
+        self.tab_center.add_tab(example_data1_interface, {"text": "数据管理", "svg": "icons/wx.svg"})
+        self.tab_center.add_tab(example_data2_interface, {"text": "客服", "svg": "icons/聊天.svg"})
+        self.tab_center.add_tab(example_setting_interface, {"text": "设置", "svg": "alert_line.svg"})
         self.tab_center.tool_button_group.set_dayu_checked(0)
 
         self.main_layout.addWidget(self.tab_center)

@@ -13,16 +13,15 @@ from dayu_widgets import MTheme, MFieldMixin, dayu_theme, MTableModel, MSortFilt
 from tinydb.table import Document
 
 from gui.widgets.c_pagination_bar.CPaginationBar import CPaginationBar, FlatStyle
-from modules.wx_auto.db.data_storage_service import data_wx_local_storage
-from modules.wx_auto.db.settings_widget import MSettingsWidget
-from modules.wx_auto.db.tiny_db_service import TABLE_WX_CHAT_GROUP_LIST
-from modules.wx_auto.icons import icons
+from modules.example.db.tiny.example_data_storage_service import example_data_local_storage
+from modules.example.db.tiny.tiny_db_service import TABLE_EXAMPLE_DATA1_LIST
+from modules.example.icons import icons
 
 
-class WxChatGroupInterface(QWidget, MFieldMixin):
+class ExampleData1Interface(QWidget, MFieldMixin):
     def __init__(self, parent=None):
-        super(WxChatGroupInterface, self).__init__(parent)
-        self.table_wx_chat_group_list = TABLE_WX_CHAT_GROUP_LIST
+        super(ExampleData1Interface, self).__init__(parent)
+        self.table_example_data1_list = TABLE_EXAMPLE_DATA1_LIST
         self.page_number = 1  # 当前页码
         self.page_size = 5  # 每页数量
         self.total_count = 0  # 总数量
@@ -30,10 +29,6 @@ class WxChatGroupInterface(QWidget, MFieldMixin):
         self.data_list = []  # 数据列表
         self.init_ui()
         self.reload_data()
-        # 是否自动执行。
-        is_auto_run = MSettingsWidget.get_setting("is_auto_run")
-        if is_auto_run:
-            self.start_up()
 
     def init_ui(self):
         self.layout = QVBoxLayout()
@@ -160,7 +155,7 @@ class WxChatGroupInterface(QWidget, MFieldMixin):
         加载数据
         :return:
         """
-        self.total_count = len(self.table_wx_chat_group_list)  # 数据总数
+        self.total_count = len(self.table_example_data1_list)  # 数据总数
         self.total_page = ceil(self.total_count / self.page_size)  # 计算总页码
         # 防止超页
         if self.page_number > self.total_page:
@@ -171,7 +166,7 @@ class WxChatGroupInterface(QWidget, MFieldMixin):
 
         # 计算起始索引
         start_index = (self.page_number - 1) * self.page_size
-        self.data_list = self.table_wx_chat_group_list.all()[start_index:start_index + self.page_size]
+        self.data_list = self.table_example_data1_list.all()[start_index:start_index + self.page_size]
         self.table_model.set_data_list(self.data_list)
 
     @Slot()
@@ -188,14 +183,14 @@ class WxChatGroupInterface(QWidget, MFieldMixin):
             row_data: Document = model.get_data_list()[row]  # 当前行数据，xxx_checked是否选中
             copy = row_data.copy()
             del copy['_parent']  # 去除出循环引用
-            self.table_wx_chat_group_list.update(copy, doc_ids=[row_data.doc_id])
+            self.table_example_data1_list.update(copy, doc_ids=[row_data.doc_id])
 
     def add(self):
         """
         新增数据
         :return:
         """
-        self.table_wx_chat_group_list.insert({
+        self.table_example_data1_list.insert({
             "name": "",
             "yield": 10,
             "status": "未完成",
@@ -217,7 +212,7 @@ class WxChatGroupInterface(QWidget, MFieldMixin):
         checked_doc_ids = [data.doc_id for data in data_list if data.get("name_checked", 0) == 2]
         if len(checked_doc_ids) == 0:
             MMessage.error("Please select the data first.", parent=self)
-        self.table_wx_chat_group_list.remove(doc_ids=checked_doc_ids)
+        self.table_example_data1_list.remove(doc_ids=checked_doc_ids)
         self.reload_data()
 
     def page_changed_handle(self, page):
@@ -231,12 +226,7 @@ class WxChatGroupInterface(QWidget, MFieldMixin):
 
     @asyncSlot()
     async def start_up(self, number=None):
-        self.loading_wrapper.set_dayu_loading(True)
-        for i in range(10):
-            await asyncio.sleep(1)
-            print(f"自动执行: {i}")
-        self.loading_wrapper.set_dayu_loading(False)
-
+        pass
     def thumbs_up(self):
         """
         弹窗
@@ -250,9 +240,9 @@ class WxChatGroupInterface(QWidget, MFieldMixin):
         m_spin_box_thumbs_up_number = MSpinBox()
         m_spin_box_thumbs_up_number.setRange(1, 100)
         m_spin_box_thumbs_up_number.setValue(20)
-        data_wx_local_storage.widget_bind_value(widget=m_spin_box_thumbs_up_number,
-                                             field_name="thumbs_up_number",
-                                             widget_property="value", widget_signal="valueChanged")
+        example_data_local_storage.widget_bind_value(widget=m_spin_box_thumbs_up_number,
+                                                field_name="thumbs_up_number",
+                                                widget_property="value", widget_signal="valueChanged")
         layout.addWidget(m_spin_box_thumbs_up_number)
         self.drawer.set_widget(widget)
         self.button_cancel = MPushButton("取消")
@@ -275,7 +265,7 @@ if __name__ == '__main__':
     loop = QEventLoop(app)
     asyncio.set_event_loop(loop)
     # 创建窗口
-    demo_widget = WxChatGroupInterface()
+    demo_widget = ExampleData1Interface()
     MTheme("dark").apply(demo_widget)
     # 显示窗口
     demo_widget.show()

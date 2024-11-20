@@ -13,7 +13,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[("./settings.json","."),("./gui","./gui"),("./modules","./modules"),(dayu_widgets_path, "dayu_widgets")],
+    datas=[("./settings.json","."),("./gui","./gui"),("./api","./api"),("./db","./db"),("./modules","./modules"),(dayu_widgets_path, "dayu_widgets")],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

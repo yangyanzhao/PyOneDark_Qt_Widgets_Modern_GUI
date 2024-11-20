@@ -2,13 +2,12 @@ import asyncio
 from PySide2.QtWidgets import QWidget, QApplication, QVBoxLayout
 from dayu_widgets.qt import MIcon, MPixmap
 from qasync import QEventLoop
-from dayu_widgets import MTheme, MLineEdit, \
+from dayu_widgets import MLineEdit, \
     MFieldMixin, MToolButton, MSwitch, MSpinBox
 
 from gui.utils.theme_util import setup_main_theme
-from modules.wx_auto.db.settings_widget import MSettingsWidget
-from modules.wx_auto.db.tiny_db_service import TABLE_WX_CHAT_GROUP_LIST
-from modules.wx_auto.icons import icons
+from modules.example.components.settings_widget import MSettingsWidget
+from modules.example.icons import icons
 
 NICKNAME = 'nickname'  # 昵称
 IS_AUTO_RUN = 'is_auto_run'  # 是否自动运行
@@ -18,11 +17,9 @@ NOTIFY_EMAIL = 'notify_email'  # 邮箱
 GREETINGS = 'greetings'
 
 
-class SettingInterface(QWidget, MFieldMixin):
+class ExampleSettingInterface(QWidget, MFieldMixin):
     def __init__(self, parent=None):
-        super(SettingInterface, self).__init__(parent)
-        # 初始化加载数据库
-        self.table_WeChatGroupList = TABLE_WX_CHAT_GROUP_LIST
+        super(ExampleSettingInterface, self).__init__(parent)
         # 初始化UI
         self.init_ui()
 
@@ -79,7 +76,7 @@ if __name__ == '__main__':
     loop = QEventLoop(app)
     asyncio.set_event_loop(loop)
     # 创建窗口
-    demo_widget = SettingInterface()
+    demo_widget = ExampleSettingInterface()
     setup_main_theme(demo_widget)
     # 显示窗口
     demo_widget.show()

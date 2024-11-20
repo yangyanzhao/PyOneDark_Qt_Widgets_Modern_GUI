@@ -6,7 +6,6 @@ from gui.core.functions import Functions
 # ///////////////////////////////////////////////////////////////
 from gui.widgets.py_table_widget.py_table_widget import PyTableWidget
 from modules.other.widget_factory import WidgetFactory
-from modules.wx_auto.interfaces.setting_interface import SettingInterface
 from .functions_main_window import *
 import sys
 import os
@@ -35,7 +34,7 @@ from .ui_main import *
 # MAIN FUNCTIONS 
 # ///////////////////////////////////////////////////////////////
 from .functions_main_window import *
-from ..left_column_menus_window.settings_base import SettingBaseInterface
+from ..left_column_menus_window.settings_collapse import SettingsCollapse
 from ..left_column_menus_window.user_information import UserInformationWidget
 from ..left_column_menus_window.user_information_token_list import UserInformationTokenListWidget
 
@@ -265,9 +264,9 @@ class SetupMainWindow:
 
         # 自定义 左列 设置菜单 TODO
         # ///////////////////////////////////////////////////////////////
-        setting_base_interface = SettingBaseInterface()
-        self.ui.left_column.menus.menus.addWidget(setting_base_interface)
-        self.ui.left_column.menus.menus.setCurrentWidget(setting_base_interface)
+        settings_collapse = SettingsCollapse()
+        self.ui.left_column.menus.menus.addWidget(settings_collapse)
+        self.ui.left_column.menus.menus.setCurrentWidget(settings_collapse)
 
         # 页面补全，对已有页面进行填充
         # ///////////////////////////////////////////////////////////////

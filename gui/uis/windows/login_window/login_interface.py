@@ -17,6 +17,7 @@ from gui.images import icons
 from gui.uis.windows.main_window.functions_main_window import MainFunctions
 from gui.utils.frameless_window_wrapper import FramelessWindowWrapper
 from gui.utils.position_util import center_point_alignment
+from gui.utils.qss_utils import set_label_background_image
 from gui.utils.theme_util import setup_main_theme
 
 
@@ -32,6 +33,7 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
         self.parent = parent
         self.setupUi(self)
         self.label.setScaledContents(False)
+        self.label.setGeometry(0, 0, self.width(), self.height())
         self.setWindowTitle('蜻蜓助手')
         self.setWindowIcon(QIcon(icons['logo.svg']))
         # 获取背景图像的尺寸
@@ -41,7 +43,7 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
 
         # 设置窗口初始大小为背景图像的尺寸
         self.resize(1066, 600)
-        self.update_background()
+        set_label_background_image(self.label, self.background_pixmap)
 
         if not isWin11():
             color = QColor(25, 33, 42)
@@ -53,12 +55,12 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
         # 数据绑定(账号)
         self.lineEdit_3.set_delay_duration(millisecond=2000)  # 延迟时间（毫秒
         py_one_dark_data_local_storage.widget_bind_value(widget=self.lineEdit_3, field_name="login_username",
-                                             widget_property="text",
-                                             widget_signal="textChanged")
+                                                         widget_property="text",
+                                                         widget_signal="textChanged")
         # 数据绑定(记住密码)
         py_one_dark_data_local_storage.widget_bind_value(widget=self.checkBox, field_name="login_remember_me",
-                                             widget_property="checked",
-                                             widget_signal="toggled")
+                                                         widget_property="checked",
+                                                         widget_signal="toggled")
         # 退出登录按钮
         self.quit_button = MPushButton(text='退出登录')
         self.quit_button.clicked.connect(lambda: self.on_logout(self.wrapper))
@@ -68,7 +70,7 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
             # 数据绑定(密码)
             self.lineEdit_4.set_delay_duration(millisecond=2000)  # 延迟时间（毫秒
             py_one_dark_data_local_storage.widget_bind_value(widget=self.lineEdit_4, field_name="login_password",
-                                                 widget_property="text", widget_signal="textChanged")
+                                                             widget_property="text", widget_signal="textChanged")
         # 构建一个隐藏的LineEdit来放置Token，以后调试直接显示出来很方便。
         self.line_edit_token = MLineEdit()
         self.line_edit_token.setVisible(False)
@@ -76,7 +78,7 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
         # 数据绑定(Token)
         self.line_edit_token.set_delay_duration(millisecond=2000)  # 延迟时间（毫秒
         py_one_dark_data_local_storage.widget_bind_value(widget=self.line_edit_token, field_name="login_token",
-                                             widget_property="text", widget_signal="textChanged")
+                                                         widget_property="text", widget_signal="textChanged")
 
     def set_wrapper(self, wrapper):
         self.wrapper = wrapper
@@ -141,7 +143,8 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
             py_one_dark_data_session_storage.set_field("online_token", online_number)
             py_one_dark_data_session_storage.set_field("mobile", mobile)
             py_one_dark_data_session_storage.set_field("expirationDate",
-                                           datetime.datetime.fromtimestamp(expirationDate / 1000).strftime("%Y-%m-%d"))
+                                                       datetime.datetime.fromtimestamp(expirationDate / 1000).strftime(
+                                                           "%Y-%m-%d"))
             py_one_dark_data_session_storage.set_field("notice_information", check_result['msg'])
             # 如果有效
             self.logged_in = True
@@ -189,28 +192,8 @@ class LoginWindow(QDialog, Ui_Form, MFieldMixin):
 
     def resizeEvent(self, e):
         super().resizeEvent(e)
-        self.update_background()
-
-    def update_background(self):
-        """
-        设置背景图
-        :return:
-        """
-        # 获取当前窗口的尺寸
-        window_width = self.width()
-        window_height = self.height()
-
-        # 计算缩放比例
-        scale_width = window_width / self.background_width
-        scale_height = window_height / self.background_height
-        scale = max(scale_width, scale_height)
-
-        # 根据缩放比例调整背景图像的尺寸
-        scaled_width = int(self.background_width * scale)
-        scaled_height = int(self.background_height * scale)
-        scaled_pixmap = self.background_pixmap.scaled(scaled_width, scaled_height)
-        # 设置背景图像
-        self.label.setPixmap(scaled_pixmap)
+        self.label.setGeometry(0, 0, self.width(), self.height())
+        set_label_background_image(self.label, self.background_pixmap)
 
     def closeEvent(self, arg__1: QCloseEvent) -> None:
         if self.logged_in:
@@ -231,6 +214,7 @@ if __name__ == '__main__':
     setup_main_theme(login_window)
     login_window_wrapper = FramelessWindowWrapper(target_widget=login_window, has_title_bar=True,
                                                   attach_title_bar_layout=login_window.verticalLayout_1)
+    login_window.set_wrapper(login_window_wrapper)
     login_window_wrapper.show()
     with loop:
         loop.run_forever()

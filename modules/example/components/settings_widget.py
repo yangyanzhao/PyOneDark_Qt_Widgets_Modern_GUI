@@ -5,7 +5,7 @@ from dayu_widgets import MFieldMixin, MMeta, MSwitch
 from dayu_widgets.qt import MPixmap
 from qasync import QEventLoop
 from gui.utils.theme_util import setup_main_theme
-from modules.wx_auto.db.data_storage_service import data_wx_local_storage
+from modules.example.db.tiny.example_data_storage_service import example_data_local_storage
 
 
 class MSettingMeta(MMeta):
@@ -47,10 +47,10 @@ class MSettingsWidget(QtWidgets.QWidget, MFieldMixin):
     def add_setting(self, widget: QWidget, field_name: str, widget_property: str, widget_signal: str,
                     cover=None, avatar=None, title=None, description=None, extra=False, parent=None):
         # 数据双向绑定
-        data_wx_local_storage.widget_bind_value(widget=widget,
-                                             field_name=field_name,
-                                             widget_property=widget_property,
-                                             widget_signal=widget_signal)
+        example_data_local_storage.widget_bind_value(widget=widget,
+                                                     field_name=field_name,
+                                                     widget_property=widget_property,
+                                                     widget_signal=widget_signal)
         meta = MSettingMeta()
         meta.setup_data({
             'cover': cover,  # 封面图片路径 例:MPixmap("app-houdini.png")
@@ -71,7 +71,7 @@ class MSettingsWidget(QtWidgets.QWidget, MFieldMixin):
         :param field_name:
         :return:
         """
-        field_data = data_wx_local_storage.get(field_name=field_name)
+        field_data = example_data_local_storage.get(field_name=field_name)
         # 设置读取值
         if field_data and field_data[field_name]:
             return field_data[field_name]

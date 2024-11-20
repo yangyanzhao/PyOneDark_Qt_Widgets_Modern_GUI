@@ -3,7 +3,7 @@
 # ///////////////////////////////////////////////////////////////
 from dayu_widgets.stacked_widget import MStackedWidget
 
-from modules.wx_auto.main import WxMainWidget
+from modules.example.main import WxMainWidget
 # IMPORT QT CORE
 # ///////////////////////////////////////////////////////////////
 from qt_core import *

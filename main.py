@@ -62,7 +62,7 @@ class MainWindow(QMainWindow):
         self.login_dialog_wrapper = FramelessDialogWrapper(target_widget=self.login_window, has_title_bar=True,
                                                            attach_title_bar_layout=self.login_window.verticalLayout_1)
         self.login_window.set_wrapper(self.login_dialog_wrapper)
-        self.login_window.check_token()
+        # self.login_window.check_token()
 
         # 绑定公告栏数据
         py_one_dark_data_session_storage.widget_bind_value(field_name="notice_information", widget=self.ui.credits.notify_label,
