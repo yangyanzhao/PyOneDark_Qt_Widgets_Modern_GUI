@@ -95,6 +95,8 @@ class FramelessDialogWrapper(QDialog):
         self.center_widget.setStyleSheet(style)
         self.center_layout = QVBoxLayout(self)
         self.center_layout.setContentsMargins(5, 5, 5, 5)
+        # self.center_layout.setContentsMargins(0, 0, 0, 0)
+        self.center_layout.setSpacing(0)
         self.center_widget.setLayout(self.center_layout)
 
         # 调整边缘缩放
