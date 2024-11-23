@@ -1,6 +1,6 @@
 import asyncio
-from PySide2.QtGui import Qt, QPixmap, QPalette
-from PySide2.QtWidgets import QApplication, QDialog, QFrame, QVBoxLayout, QWidget, QHBoxLayout, QPushButton, QBoxLayout
+from PySide2.QtGui import Qt
+from PySide2.QtWidgets import QApplication, QFrame, QVBoxLayout, QWidget, QHBoxLayout, QPushButton, QLabel
 from qasync import QEventLoop
 
 from gui.core.json_settings import Settings
@@ -30,6 +30,7 @@ class FramelessWindowWrapper(QWidget):
         self.center_widget.setObjectName("center_widget")
         self.layout = QVBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)
+        self.setContentsMargins(0, 0, 0, 0)
         self.layout.setSpacing(0)
         self.layout.addWidget(self.center_widget)
 
@@ -95,6 +96,8 @@ class FramelessWindowWrapper(QWidget):
         self.center_widget.setStyleSheet(style)
         self.center_layout = QVBoxLayout(self)
         self.center_layout.setContentsMargins(5, 5, 5, 5)
+        # self.center_layout.setContentsMargins(0, 0, 0, 0)
+        self.center_layout.setSpacing(0)
         self.center_widget.setLayout(self.center_layout)
 
         # 调整边缘缩放
